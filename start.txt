@@ -1,0 +1,3 @@
+npm run serve
+
+create schema called hotel_project in mysql 
