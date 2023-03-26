@@ -1,4 +1,3 @@
-// const pool = require('./connection');
 const express = require('express')
 const connection = require('./connection');
 
