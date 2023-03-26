@@ -13,7 +13,7 @@ router.get('/customer/login' ,(req, res)=>{
             else res.send("Failed");
         })
     });
-router.get('employee/login', (req, res)=>{
+router.get('/employee/login', (req, res)=>{
         checkLogin(req.body.username, req.body.password, true).then(isValid=>{
             if(isValid) res.send("Success");
             else res.send("Failed");
@@ -120,7 +120,7 @@ function checkLogin(username, password, isEmployee){
         }
         var response = runQuery(query);
         response.then((data)=>{
-            if(data[0]['exist']==0){
+            if(data['rows'][0]['exist']==0){
                 resolve(false);
             }else{
                 resolve(true);
