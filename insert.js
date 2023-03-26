@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router();
+const create = require('./create')
 const { runQuery } = require('./database');
 
 
@@ -12,6 +13,7 @@ function format(){
     formatted+= (formatted[arguments.length-1]+")")
     return formatted;
 }
+
 // Add a booking (Automatically create a copy of this data in the archive)
 router.get('/book',(req,res)=>{
     // MAKE A SEPARATE FUNCTION FOR THIS AND IN THE MAIN FUNCTION HERE, CHECK THAT BOTH PROMISES SUCCESSFULLY FINISHES
@@ -45,7 +47,7 @@ router.get('/book',(req,res)=>{
 // Create new hotel chain
 
 // Create new employee
-
+router.use('/create', create);
 
 
 module.exports = router;
