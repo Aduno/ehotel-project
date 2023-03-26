@@ -7,7 +7,7 @@ const { runQuery } = require('./database');
 //Create Hotel_Chain table
 router.post('/hotelchain', (req, res) => {
     const chainQuery = `
-    CREATE TABLE IF NOT EXISTS Hotel_Chain (
+    CREATE TABLE Hotel_Chain (
     Chain_Name VARCHAR(255) NOT NULL PRIMARY KEY
     )`;
     runQuery(chainQuery)
@@ -23,7 +23,7 @@ router.post('/hotelchain', (req, res) => {
 // Create Office table
 router.post('/office', (req, res) => {
     const officeQuery = `
-    CREATE TABLE IF NOT EXISTS Office (
+    CREATE TABLE Office (
     Branch_number INT NOT NULL PRIMARY KEY,
     Chain_Name VARCHAR(255) NOT NULL,
     Country VARCHAR(255) NOT NULL,
@@ -48,7 +48,7 @@ router.post('/office', (req, res) => {
 // Create Hotel table
 router.post('/hotel', (req, res) => {//here should check the star rating condition for 1-5 stars
     const hotelQuery = `
-    CREATE TABLE IF NOT EXISTS Hotel (
+    CREATE TABLE Hotel (
     Star_rating INT CHECK (Star_rating BETWEEN 1 AND 5),
     Hotel_ID INT NOT NULL PRIMARY KEY,
     Chain_Name VARCHAR(255) NOT NULL,
@@ -196,20 +196,21 @@ router.post('/renting', (req, res) => {
 });
 //Create table booking_archive
 router.post('/booking_archive', (req, res) => {//Are we sure we only need booking_id as primary key? // what about the foreing keys? 
-    const bookingArchiveQuery = `CREATE TABLE Booking_Archive (
-        Booking_start_date DATE NOT NULL,
-        Booking_end_date DATE NOT NULL,
-        Booking_ID INT NOT NULL,
-        Customer_ID INT NOT NULL,
-        Room_number INT NOT NULL,
-        Hotel_ID INT NOT NULL,
-        Chain_name VARCHAR(255) NOT NULL,
-        PRIMARY KEY (Booking_ID),
-        FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
-        FOREIGN KEY (Room_number) REFERENCES Room(Room_number),
-        FOREIGN KEY (Chain_Name) REFERENCES Hotel_Chain(Chain_Name),
-        FOREIGN KEY (Hotel_ID) REFERENCES Hotel(HotelID),
-        FOREIGN KEY (Booking_ID) REFERENCES Booking(Booking_ID)
+    const bookingArchiveQuery = `
+    CREATE TABLE Booking_Archive (
+    Booking_start_date DATE NOT NULL,
+    Booking_end_date DATE NOT NULL,
+    Booking_ID INT NOT NULL,
+    Customer_ID INT NOT NULL,
+    Room_number INT NOT NULL,
+    Hotel_ID INT NOT NULL,
+    Chain_name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (Booking_ID),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
+    FOREIGN KEY (Room_number) REFERENCES Room(Room_number),
+    FOREIGN KEY (Chain_Name) REFERENCES Hotel_Chain(Chain_Name),
+    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(HotelID),
+    FOREIGN KEY (Booking_ID) REFERENCES Booking(Booking_ID)
     )`;
     runQuery(bookingArchiveQuery)
         .then(result => {
