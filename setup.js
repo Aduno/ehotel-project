@@ -15,4 +15,5 @@ router.post('/employee', (req, res) => {
         })
 })
 
+// Create a new employee
 module.exports = router;

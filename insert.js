@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const create = require('./create')
+const setup = require('./setup')
 const { runQuery } = require('./database');
 
 
@@ -38,7 +38,6 @@ router.get('/book',(req,res)=>{
 
 // Create a check-in + check-in from booking (+Archive)
 
-// Add create customer 
 
 // Create new hotel
 
@@ -46,8 +45,8 @@ router.get('/book',(req,res)=>{
 
 // Create new hotel chain
 
-// Create new employee
-router.use('/create', create);
+// Creating new 
+router.use('/setup', setup);
 
 
 module.exports = router;
