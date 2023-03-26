@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const queries  = require('./queries');
 const insert = require('./insert');
+const update = require('./update');
 const http = require('http');
 
 // Port validation
@@ -43,7 +44,7 @@ switch (error.code) {
 app.use(express.json());
 app.use('/queries', queries);
 app.use('/insert', insert)
-
+app.use('/update', update)
 // Create server and start
 const server = http.createServer(app);
 
