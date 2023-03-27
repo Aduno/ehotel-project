@@ -1,3 +1,16 @@
-npm run serve
+1. npm install
+2. npm install pg 
+3. Install what ever "MODULE MISSING" error messages tells you
+4. npm run serve
 
-create schema called hotel_project in mysql 
+API format
+/insert
+This corresponds to the insert.js file. Check the routes for more details
+Ex. http://localhost:3000/insert/book
+
+/update
+This corresponds to the update.js file. Check the routes for more details
+
+/queries
+This corresponds to the queries.js file. Check the routes for more details
+

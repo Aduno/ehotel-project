@@ -15,7 +15,7 @@ function format(){
 }
 
 // Add a booking (Automatically create a copy of this data in the archive)
-router.get('/book',(req,res)=>{
+router.post('/book',(req,res)=>{
     // MAKE A SEPARATE FUNCTION FOR THIS AND IN THE MAIN FUNCTION HERE, CHECK THAT BOTH PROMISES SUCCESSFULLY FINISHES
     var values = format(req.query.hotelID, req.query.roomNumber, req.query.customerID, req.query.start, req.query.end);
     var insert = 'insert into booking(hotel_id, room_number, customer_id, booking_start_date, booking_end_date) values '+ values;
