@@ -24,8 +24,10 @@ router.get('/hotel_chain', (req, res)=>{
         var query = 'select chain_name from hotel_chain'
         var response = runQuery(query);
         response.then((data)=>{
-            resolve(data);
-        })
+            res.send(data);
+        }).catch((err)=>{
+            console.log(err);
+        });
     })
     
 // List all the hotels for a hotel chain
@@ -34,6 +36,8 @@ router.get('/hotel_chain/:chain_name', (req, res)=>{
         var response = runQuery(query);
         response.then((data)=>{
             res.send(data);
+        }).catch((err)=>{
+            console.log(err);
         });
     })
 
@@ -43,7 +47,9 @@ router.get('/hotel_chain/:chain_name/office', (req, res)=>{
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
-    })
+    }).catch((err)=>{
+        console.log(err);
+    });
 })
 
 // Get details of a office for a hotel chain
@@ -52,7 +58,9 @@ router.get('/hotel_chain/:chain_name/office/:branch_number', (req, res)=>{
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
-    })
+    }).catch((err)=>{
+        console.log(err);
+    });
 })
 
 // Get details of a hotel for a hotel chain
@@ -61,7 +69,9 @@ router.get('/hotel/:hotel_id', (req, res)=>{
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
-    })
+    }).catch((err)=>{
+        console.log(err);
+    });
 })
 
 
@@ -71,7 +81,9 @@ router.get('/hotel/:hotel_id/rooms', (req, res)=>{
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
-    })
+    }).catch((err)=>{
+        console.log(err);
+    });
 })
 
 // Get details for a room in a hotel
@@ -82,7 +94,9 @@ router.get('/customers', (req, res)=>{
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
-    })
+    }).catch((err)=>{
+        console.log(err);
+    });
 })
 
 // Get customer information
@@ -92,7 +106,9 @@ router.get('/customer/:customer_id', (req, res)=>{
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
-    })
+    }).catch((err)=>{
+        console.log(err);
+    });
 })
 
 // Get Employee information
@@ -101,7 +117,9 @@ router.get('/employee/:employee_id', (req, res)=>{
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
-    })
+    }).catch((err)=>{
+        console.log(err);
+    });
 })
 
 // Get Booking information for a room
@@ -125,6 +143,9 @@ function checkLogin(username, password, isEmployee){
             }else{
                 resolve(true);
             }
+        }).catch((err)=>{
+            console.log(err);
+            resolve(false);
         })
     })
 }
