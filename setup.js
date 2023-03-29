@@ -46,11 +46,12 @@ router.post('/office', (req, res) => {
         });
 });
 // Create Hotel table
+//to respect data insertion rules, we consider area to be the city
 router.post('/hotel', (req, res) => {//here should check the star rating condition for 1-5 stars
     const hotelQuery = `
     CREATE TABLE Hotel (
-    Star_rating INT CHECK (Star_rating BETWEEN 1 AND 5),
     Hotel_ID INT NOT NULL PRIMARY KEY,
+    Star_rating INT CHECK (Star_rating BETWEEN 1 AND 5),
     Chain_Name VARCHAR(255) NOT NULL,
     Country VARCHAR(255) NOT NULL,
     City VARCHAR(255) NOT NULL,
