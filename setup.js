@@ -22,7 +22,7 @@ router.post('/hotelchain', (req, res) => {
 });
 // Create Office table
 router.post('/office', (req, res) => {
-    const officeQuery = `
+    const officeQuery = `w
     CREATE TABLE Office (
     Branch_number INT NOT NULL PRIMARY KEY,
     Chain_Name VARCHAR(30) NOT NULL,
