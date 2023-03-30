@@ -8,7 +8,7 @@ const { runQuery } = require('./database');
 router.post('/hotelchain', (req, res) => {
     const chainQuery = `
     CREATE TABLE Hotel_Chain (
-    Chain_Name VARCHAR(255) NOT NULL PRIMARY KEY
+    Chain_Name VARCHAR(30) NOT NULL PRIMARY KEY
     )`;
     runQuery(chainQuery)
         .then(result => {
@@ -25,14 +25,14 @@ router.post('/office', (req, res) => {
     const officeQuery = `
     CREATE TABLE Office (
     Branch_number INT NOT NULL PRIMARY KEY,
-    Chain_Name VARCHAR(255) NOT NULL,
-    Country VARCHAR(255) NOT NULL,
-    Street_name VARCHAR(255) NOT NULL,
+    Chain_Name VARCHAR(30) NOT NULL,
+    Country VARCHAR(30) NOT NULL,
+    Street_name VARCHAR(30) NOT NULL,
     Street_number INT NOT NULL,
     Unit_number INT,
-    City VARCHAR(255) NOT NULL,
-    Contact_emails VARCHAR(255),
-    Contact_phone_numbers VARCHAR(255),
+    City VARCHAR(30) NOT NULL,
+    Contact_emails VARCHAR(30),
+    Contact_phone_numbers VARCHAR(30),
     FOREIGN KEY (Chain_Name) REFERENCES Hotel_Chain(Chain_Name)
     )`;
     runQuery(officeQuery)
@@ -52,14 +52,14 @@ router.post('/hotel', (req, res) => {//here should check the star rating conditi
     CREATE TABLE Hotel (
     Hotel_ID INT NOT NULL PRIMARY KEY,
     Star_rating INT CHECK (Star_rating BETWEEN 1 AND 5),
-    Chain_Name VARCHAR(255) NOT NULL,
-    Country VARCHAR(255) NOT NULL,
-    City VARCHAR(255) NOT NULL,
-    Street_name VARCHAR(255) NOT NULL,
+    Chain_Name VARCHAR(30) NOT NULL,
+    Country VARCHAR(30) NOT NULL,
+    City VARCHAR(30) NOT NULL,
+    Street_name VARCHAR(30) NOT NULL,
     Street_number INT NOT NULL,
     Unit_number INT,
-    email VARCHAR(255),
-    Phone_number VARCHAR(255),
+    email VARCHAR(30),
+    Phone_number VARCHAR(30),
     FOREIGN KEY (Chain_Name) REFERENCES Hotel_Chain(Chain_Name)
     )`;
     runQuery(hotelQuery)
@@ -78,15 +78,15 @@ router.post('/room', (req, res) => {//still need to work on the condition of the
     CREATE TABLE IF NOT EXISTS Room (
     Room_number INT NOT NULL PRIMARY KEY,
     Hotel_ID INT NOT NULL,
-    Price DECIMAL(10,2),
-    TV BOOLEAN,
-    Air_Conditioner BOOLEAN,
-    Fridge BOOLEAN,
-    Wifi BOOLEAN,
-    Room_Service BOOLEAN,
-    Capacity VARCHAR(255),
-    View VARCHAR(255),
-    Extendable BOOLEAN,
+    Price MONEY NOT NULL,
+    TV BOOLEAN NOT NULL,
+    Air_Conditioner BOOLEAN NOT NULL,
+    Fridge BOOLEAN NOT NULL,
+    Wifi BOOLEAN NOT NULL,
+    Room_Service BOOLEAN NOT NULL,
+    Capacity INT CHECK(Capcity>1 and Capcity<12) NOT NULL,
+    View VARCHAR(30) CHECK(View IN ('sea view','mountain view','city view')) NOT NULL,
+    Extendable BOOLEAN NOT NULL,
     Problems TEXT,
     FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID)
     )`;
@@ -105,10 +105,10 @@ router.post('/employee', (req, res) => {
     const employeeQuery = `
     CREATE TABLE Employee (
     EmployeeID INT PRIMARY KEY AUTO_INCREMENT,
-    Position VARCHAR(255) NOT NULL,
-    First_name VARCHAR(255) NOT NULL,
-    Last_name VARCHAR(255) NOT NULL,
-    Salary FLOAT NOT NULL,
+    Position VARCHAR(30) NOT NULL,
+    First_name VARCHAR(30) NOT NULL,
+    Last_name VARCHAR(30) NOT NULL,
+    Salary MONEY NOT NULL,
     Hotel_ID INT NOT NULL,
     ManagerID INT,
     FOREIGN KEY (Hotel_ID) REFERENCES Hotel(HotelID),
@@ -129,14 +129,14 @@ router.post('/customer', (req, res) => {
     const customerQuery = `
     CREATE TABLE Customer (
     Customer_ID INT PRIMARY KEY AUTO_INCREMENT,
-    First_name VARCHAR(255) NOT NULL,
-    Last_name VARCHAR(255) NOT NULL,
-    Address_country VARCHAR(255) NOT NULL,
-    Address_city VARCHAR(255) NOT NULL,
-    Address_street_name VARCHAR(255) NOT NULL,
+    First_name VARCHAR(30) NOT NULL,
+    Last_name VARCHAR(30) NOT NULL,
+    Address_country VARCHAR(30) NOT NULL,
+    Address_city VARCHAR(30) NOT NULL,
+    Address_street_name VARCHAR(30) NOT NULL,
     Address_street_number INT NOT NULL,
     Address_unit_number INT,
-    SSN_SIN VARCHAR(255) NOT NULL,
+    SSN_SIN NUMERIC(9,0) NOT NULL,
     Registration_date DATE NOT NULL
     )`;
     runQuery(customerQuery)
@@ -157,9 +157,10 @@ router.post('/booking', (req, res) => {
     Customer_ID INT NOT NULL,
     Booking_start_date DATE NOT NULL,
     Booking_end_date DATE NOT NULL,
-    Room_ID INT NOT NULL,
+    Room_number INT NOT NULL,
+    CHECK (Booking_start_date <= Booking_end_date),
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
-    FOREIGN KEY (Room_ID) REFERENCES Room(RoomID)
+    FOREIGN KEY (Room_number) REFERENCES Room(Room_number)
     )`;
     runQuery(bookingQuery)
         .then(result => {
@@ -177,12 +178,12 @@ router.post('/renting', (req, res) => {
     CREATE TABLE Renting (
     Rent_ID INT PRIMARY KEY AUTO_INCREMENT,
     Customer_ID INT NOT NULL,
-    Room_ID INT NOT NULL,
+    Room_number INT NOT NULL,
     Booking_ID INT,
     Check_in_date DATE NOT NULL,
     Check_out_date DATE NOT NULL,
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
-    FOREIGN KEY (Room_ID) REFERENCES Room(RoomID),
+    FOREIGN KEY (Room_number) REFERENCES Room(Room_number),
     FOREIGN KEY (Booking_ID) REFERENCES Booking(Booking_ID)
     )`;
     runQuery(rentingQuery)
@@ -233,7 +234,7 @@ router.post('/renting_archive', (req, res) => {//Are we sure we only need rentin
     Customer_ID INT NOT NULL,
     Room_number INT NOT NULL,
     Hotel_ID INT NOT NULL,
-    Chain_name VARCHAR(255) NOT NULL,
+    Chain_name VARCHAR(30) NOT NULL,
     PRIMARY KEY (Renting_ID),
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
     FOREIGN KEY (Room_number) REFERENCES Room(Room_number),
@@ -252,5 +253,10 @@ router.post('/renting_archive', (req, res) => {//Are we sure we only need rentin
         });
 });
 
+router.post('/triggers', (req, res) => {
+    var query = `
+        CREATE TRIGGER 
+    `
+});
 // Create a new employee
 module.exports = router;
