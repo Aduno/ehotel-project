@@ -38,14 +38,16 @@ router.get('/book',(req,res)=>{
 
 // Create a check-in + check-in from booking (+Archive)
 
-
 // Create new hotel
 
 // Create new rooms
 
 // Create new hotel chain
 
-// Creating new 
+// Creating new user
+router.post('/user', (req, res) => {
+    var query = "insert into customer(first_name, last_name, country) values ('"+req.body.username+"";
+})
 router.use('/setup', setup);
 
 

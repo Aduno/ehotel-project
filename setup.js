@@ -84,7 +84,7 @@ router.post('/room', (req, res) => {//still need to work on the condition of the
     Fridge BOOLEAN NOT NULL,
     Wifi BOOLEAN NOT NULL,
     Room_Service BOOLEAN NOT NULL,
-    Capacity INT CHECK(Capacity>1 and Capacity<12) NOT NULL,
+    Capacity INT CHECK(Capacity>=1 and Capacity<=12) NOT NULL,
     View VARCHAR(30) CHECK(View IN ('sea view','mountain view','city view')) NOT NULL,
     Extendable BOOLEAN NOT NULL,
     Problems TEXT,

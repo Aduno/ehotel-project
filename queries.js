@@ -29,7 +29,17 @@ router.get('/hotel_chain', (req, res)=>{
             console.log(err);
         });
     })
-    
+
+// Get all the hotels 
+router.get('/hotel_chain/hotels', (req, res)=>{
+    var query ='select * from hotel';
+        var response = runQuery(query);
+        response.then((data)=>{
+            res.send(data);
+        }).catch((err)=>{
+            console.log(err);
+        });
+})
 // List all the hotels for a hotel chain
 router.get('/hotel_chain/:chain_name', (req, res)=>{
         var query ='select hotel_id from hotel where chain_name ='+req.params.chain_name;
