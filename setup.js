@@ -128,7 +128,7 @@ router.post('/employee', (req, res) => {
 router.post('/customer', (req, res) => {
     const customerQuery = `
     CREATE TABLE Customer (
-    Customer_ID INT PRIMARY KEY,
+    Customer_ID SERIAL PRIMARY KEY,
     First_name VARCHAR(30) NOT NULL,
     Last_name VARCHAR(30) NOT NULL,
     Address_country VARCHAR(30) NOT NULL,
@@ -153,8 +153,8 @@ router.post('/customer', (req, res) => {
 router.post('/booking', (req, res) => {
     const bookingQuery = `
     CREATE TABLE Booking (
-    Booking_ID INT PRIMARY KEY,
-    Customer_ID INT NOT NULL,
+    Booking_ID SERIAL PRIMARY KEY,
+    Customer_ID SERIAL NOT NULL,
     Booking_start_date DATE NOT NULL,
     Booking_end_date DATE NOT NULL,
     Room_number INT NOT NULL,
@@ -176,10 +176,10 @@ router.post('/booking', (req, res) => {
 router.post('/renting', (req, res) => {
     const rentingQuery = `
     CREATE TABLE Renting (
-    Rent_ID INT PRIMARY KEY,
-    Customer_ID INT NOT NULL,
+    Renting_ID SERIAL PRIMARY KEY,
+    Customer_ID SERIAL NOT NULL,
     Room_number INT NOT NULL,
-    Booking_ID INT,
+    Booking_ID SERIAL,
     Check_in_date DATE NOT NULL,
     Check_out_date DATE NOT NULL,
     CHECK (Check_in_date <= Check_out_date),
@@ -206,8 +206,8 @@ router.post('/booking_archive', (req, res) => {//Are we sure we only need bookin
     CREATE TABLE Booking_Archive (
     Booking_start_date DATE NOT NULL,
     Booking_end_date DATE NOT NULL,
-    Booking_ID INT NOT NULL,
-    Customer_ID INT NOT NULL,
+    Booking_ID SERIAL NOT NULL,
+    Customer_ID SERIAL NOT NULL,
     Room_number INT NOT NULL,
     Hotel_ID INT NOT NULL,
     Chain_name VARCHAR(30) NOT NULL,
@@ -230,10 +230,11 @@ router.post('/renting_archive', (req, res) => {//Are we sure we only need rentin
     CREATE TABLE renting_Archive (
     Renting_start_date DATE NOT NULL,
     Renting_end_date DATE NOT NULL,
-    Renting_ID INT NOT NULL,
-    Customer_ID INT NOT NULL,
+    Renting_ID SERIAL NOT NULL,
+    Customer_ID SERIAL NOT NULL,
     Room_number INT NOT NULL,
     Hotel_ID INT NOT NULL,
+    Booking_ID SERIAL,
     Chain_name VARCHAR(30) NOT NULL,
     PRIMARY KEY (Renting_ID),
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
