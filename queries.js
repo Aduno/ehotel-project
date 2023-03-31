@@ -31,7 +31,7 @@ router.get('/hotel_chain', (req, res)=>{
     })
 
 // Get all the hotels 
-router.get('/hotel_chain/hotels', (req, res)=>{
+router.get('/hotels', (req, res)=>{
     var query ='select * from hotel';
         var response = runQuery(query);
         response.then((data)=>{

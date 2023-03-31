@@ -4,6 +4,8 @@ const queries  = require('./queries');
 const insert = require('./insert');
 const update = require('./update');
 const http = require('http');
+const cors = require('cors')
+
 
 // Port validation
 const normalizePort = val => {
@@ -40,7 +42,7 @@ switch (error.code) {
 }
 };
 
-// 
+app.use(cors());
 app.use(express.json());
 app.use('/queries', queries);
 app.use('/insert', insert)
