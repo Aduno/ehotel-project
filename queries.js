@@ -142,6 +142,7 @@ router.get('/bookings/:customer_id', (req, res)=>{
         console.log(err);
     });
 })
+
 // All bookings 
 router.get('/bookings', (req, res)=>{
     var query = 'SELECT * FROM booking';
@@ -160,15 +161,15 @@ router.get('/available_rooms', (req, res)=>{
         max_price: req.query.max_price,
         start_date: req.query.start_date,
         end_date: req.query.end_date,
-        star_rating: req.query.star_rating.toString().split(','),
-        hotel_chain: req.query.hotel_chain.toString().split(','),
-        views: req.query.views.toString().split(','),
         tv: req.query.amenities.tv,
         room_service: req.query.amenities.tv,
         fridge: req.query.amenities.fridge,
         wifi: req.query.amenities.wifi,
         air_conditioner: req.query.amenities.air_conditioner,
         extendable: req.query.extendable,
+        star_rating: req.query.star_rating.toString().split(','),
+        hotel_chain: req.query.hotel_chain.toString().split(','),
+        views: req.query.views.toString().split(','),
         city: req.query.city.toString().split(','),
         room_capacity: req.query.room_capacity.toString().split(','),
         country: req.query.country.toString().split(',')
@@ -239,7 +240,7 @@ function formatFilter(filter){
 
 function sqlFormatList(list){
     var formatted = '';
-    for(var item in list){
+    for(var item of list){
         console.log(item);
         formatted+= `'${item}',`;
     }
