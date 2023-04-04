@@ -3,6 +3,7 @@ const app = express();
 const queries  = require('./queries');
 const insert = require('./insert');
 const update = require('./update');
+const remove = require('./remove');
 const http = require('http');
 const cors = require('cors')
 
@@ -45,8 +46,10 @@ switch (error.code) {
 app.use(cors());
 app.use(express.json());
 app.use('/queries', queries);
-app.use('/insert', insert)
-app.use('/update', update)
+app.use('/insert', insert);
+app.use('/update', update);
+app.use('/delete', remove);
+
 // Create server and start
 const server = http.createServer(app);
 

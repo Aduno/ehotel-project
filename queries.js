@@ -132,12 +132,56 @@ router.get('/employee/:employee_id', (req, res)=>{
     });
 })
 
-// Get Booking information for a room
+// Get Booking information for a room based on customer_id
+router.get('/bookings/:customer_id', (req, res)=>{
+    var query = 'SELECT * FROM booking where customer_id='+req.params.customer_id;
+    var response = runQuery(query);
+    response.then((data)=>{
+        res.send(data);
+    }).catch((err)=>{
+        console.log(err);
+    });
+})
+// All bookings 
+router.get('/bookings', (req, res)=>{
+    var query = 'SELECT * FROM booking';
+    var response = runQuery(query);
+    response.then((data)=>{
+        res.send(data);
+    }).catch((err)=>{
+        console.log(err);
+    });
+})
 
-// 
-
+// Return rooms that are available for use based on the filter
+router.get('/available_rooms', (req, res)=>{
+    var filter = {
+        min_price: req.query.min_price,
+        max_price: req.query.max_price,
+        start_date: req.query.start_date,
+        end_date: req.query.end_date,
+        star_rating: req.query.star_rating.toString().split(','),
+        hotel_chain: req.query.hotel_chain.toString().split(','),
+        views: req.query.views.toString().split(','),
+        tv: req.query.amenities.tv,
+        room_service: req.query.amenities.tv,
+        fridge: req.query.amenities.fridge,
+        wifi: req.query.amenities.wifi,
+        air_conditioner: req.query.amenities.air_conditioner,
+        extendable: req.query.extendable,
+        city: req.query.city.toString().split(','),
+        room_capacity: req.query.room_capacity.toString().split(','),
+        country: req.query.country.toString().split(',')
+    }
+    query = 'SELECT * FROM room join hotel using (hotel_id) where '+ formatFilter(filter);
+    var response = runQuery(query);
+    response.then((data)=>{
+        res.send(data);
+    }).catch((err)=>{
+        console.log(err);
+    });
+})
 // ** Query Functions ** //
-
 function checkLogin(username, password, isEmployee){
     return new Promise((resolve, reject)=>{
         if(isEmployee){
@@ -158,6 +202,48 @@ function checkLogin(username, password, isEmployee){
             resolve(false);
         })
     })
+}
+
+// Not really worth to make use hashmap to reduce time complexity
+// Sorry for this abomination of code lol
+function formatFilter(filter){
+    var query = '';
+    for(var key in filter){
+        if(filter[key]){
+            if(filter[key] instanceof Array){
+                if(filter[key][0]){
+                    var formattedList = sqlFormatList(filter[key])
+                    query+= key+' IN ('+ formattedList + ') and ';
+                }
+            }
+            else if(key=="min_price"){
+                query+= 'price>= CAST('+ filter[key]+' as MONEY) and ';
+            }
+            else if(key == "max_price"){
+                query+= 'price<= CAST('+filter[key]+' as MONEY) and ';
+            }
+            else if(key=="start_date"){
+                query+= key+'>='+filter[key]+' and ';
+            }
+            else if(key=="end_date"){
+                query+= key+'<='+filter[key]+' and ';
+            }
+            else{
+                query+= key+'='+filter[key]+' and ';
+            }
+        }
+    }
+    query = query.substring(0, query.length-5);
+    return query;
+}
+
+function sqlFormatList(list){
+    var formatted = '';
+    for(var item in list){
+        console.log(item);
+        formatted+= `'${item}',`;
+    }
+    return formatted.substring(0, formatted.length-1);
 }
 
 module.exports = router;
