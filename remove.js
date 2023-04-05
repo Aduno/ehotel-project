@@ -46,14 +46,5 @@ router.post('/booking/:booking_id',(req, res) => {
     })
 })
 
-router.post('/renting/:renting_id',(req, res) => {
-    var query = 'delete from renting where renting_id ='+req.params.renting_id;
-    var response = runQuery(query);
-    response.then((result) => {
-        res.send(result);
-    }).catch((err) => {
-        console.log(err);
-        res.sendStatus(500);
-    })
-})
+
 module.exports = router;

@@ -48,7 +48,8 @@ router.get('/book',(req,res)=>{
 router.post('/user', (req, res) => {
     var query = "insert into customer(first_name, last_name, country) values ('"+req.body.username+"";
 })
-router.use('/setup', setup);
 
+
+router.use('/setup', setup);
 
 module.exports = router;
