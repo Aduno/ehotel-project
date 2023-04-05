@@ -57,12 +57,14 @@ function formatHotelFilter(filter){
     var formatted = '';
     for(var key in filter){
         // if item is of type array and is not empty
-        if(Array.isArray(filter[key]) && filter[key][0]){
-            formatted += key + ' in ('
-            for(var val of filter[key]){
-                formatted += `'${val}',`
+        if(Array.isArray(filter[key])){
+            if(filter[key][0]){
+                formatted += key + ' in ('
+                for(var val of filter[key]){
+                    formatted += `'${val}',`
+                }
+                formatted= formatted.substring(0,formatted.length-1)+') and '
             }
-            formatted= formatted.substring(0,formatted.length-1)+') and '
         }
         else if(filter[key]){
             if(key =='num_rooms'){
@@ -194,6 +196,7 @@ router.get('/bookings', (req, res)=>{
 // Return rooms that are available for use based on the filter
 router.get('/available_rooms', (req, res)=>{
     var filter = {
+        hotel_id: req.query.hotel_id,
         min_price: req.query.min_price,
         max_price: req.query.max_price,
         start_date: req.query.start_date,
@@ -205,11 +208,9 @@ router.get('/available_rooms', (req, res)=>{
         air_conditioner: req.query.amenities.air_conditioner,
         extendable: req.query.extendable,
         views: req.query.views.toString().split(','),
-        city: req.query.city.toString().split(','),
         room_capacity: req.query.room_capacity.toString().split(','),
-        country: req.query.country.toString().split(',')
     }
-    query = 'SELECT * FROM room join hotel using (hotel_id) where '+ formatFilter(filter);
+    query = 'SELECT * from room where '+ formatFilter(filter);
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
