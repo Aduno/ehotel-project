@@ -44,7 +44,7 @@ router.get('/hotels', (req, res)=>{
     select * from 
     hotel, 
     (select count(room.room_number) as num_rooms, hotel_id from hotel join room using(hotel_id) group by hotel_id) 
-    as room_num where room_num.hotel_id = hotel.hotel_id and `+ formatHotelFilter(hotel);
+    as room_num where room_num.hotel_id = hotel.hotel_id `+ formatHotelFilter(hotel);
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
@@ -53,32 +53,6 @@ router.get('/hotels', (req, res)=>{
     });
 })
 
-function formatHotelFilter(filter){
-    var formatted = '';
-    for(var key in filter){
-        // if item is of type array and is not empty
-        if(Array.isArray(filter[key])){
-            if(filter[key][0]){
-                formatted += key + ' in ('
-                for(var val of filter[key]){
-                    formatted += `'${val}',`
-                }
-                formatted= formatted.substring(0,formatted.length-1)+') and '
-            }
-        }
-        else if(filter[key]){
-            if(key =='num_rooms'){
-                formatted += key + " > '" + filter[key]+ "' and ";
-                console.log(formatted)
-            }
-            else{
-                formatted += key + " = '" + filter[key] + "' and ";
-            }
-        }
-    }
-    formatted = formatted.substring(0, formatted.length-5);
-    return formatted;
-}
 
 // List all the hotels for a hotel chain
 router.get('/hotel_chain/:chain_name', (req, res)=>{
@@ -193,6 +167,7 @@ router.get('/bookings', (req, res)=>{
     });
 })
 
+// *** Room filter page apis ***
 // Return rooms that are available for use based on the filter
 router.get('/available_rooms', (req, res)=>{
     var filter = {
@@ -218,6 +193,34 @@ router.get('/available_rooms', (req, res)=>{
         console.log(err);
     });
 })
+// Gets all the cities in the database
+router.get('cities', (req, res)=>{
+    var query = 'SELECT DISTINCT(city) from hotel';
+    var response = runQuery(query);
+    response.then((data)=>{
+        res.send(data);
+    }).catch((err)=>{
+        console.log(err);
+        res.sendStatus(500);
+    });
+})
+// Gets the capacity of the hotel
+router.get('/available_rooms/:city', (req, res)=>{
+    if(req.query.city){
+        var city = req.params.city.replace(' ','_');
+        var query = '(select * from '+ req.params.city + '_Capacity])'  
+        var response = runQuery(query);
+        response.then((data)=>{
+            res.send(data);
+        }).catch((err)=>{
+            console.log(err);
+            res.sendStatus(500);
+        })
+    }
+    else{
+        res.sendStatus(500);
+    }
+})
 // ** Query Functions ** //
 function checkLogin(username, password, isEmployee){
     return new Promise((resolve, reject)=>{
@@ -240,7 +243,35 @@ function checkLogin(username, password, isEmployee){
         })
     })
 }
-
+// Function for formatting query parameters for hotel filter
+function formatHotelFilter(filter){
+    var formatted = '';
+    for(var key in filter){
+        // if item is of type array and is not empty
+        if(Array.isArray(filter[key])){
+            if(filter[key][0]){
+                formatted += key + ' in ('
+                for(var val of filter[key]){
+                    formatted += `'${val}',`
+                }
+                formatted= formatted.substring(0,formatted.length-1)+') and '
+            }
+        }
+        else if(filter[key]){
+            if(key =='num_rooms'){
+                formatted += key + " > '" + filter[key]+ "' and ";
+                console.log(formatted)
+            }
+            else{
+                formatted += key + " = '" + filter[key] + "' and ";
+            }
+        }
+    }
+    if(formatted){
+        formatted = ' and ' + formatted.substring(0, formatted.length-5);
+    }
+    return formatted;
+}
 // Not really worth to make use hashmap to reduce time complexity
 // Sorry for this abomination of code lol
 function formatFilter(filter){
