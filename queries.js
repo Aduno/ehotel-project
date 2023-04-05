@@ -45,16 +45,12 @@ router.get('/hotels', (req, res)=>{
     hotel, 
     (select count(room.room_number) as num_rooms, hotel_id from hotel join room using(hotel_id) group by hotel_id) 
     as room_num where room_num.hotel_id = hotel.hotel_id and `+ formatHotelFilter(hotel);
-    console.log(query);
-    // var query = 'select count(room_id) as no_room, hotel_id from hotel join room using (hotel_id) group by hotel_id'
-    // Get the hotels baesd on filter
-    // var query ='select * from hotel () where '+ formatHotelFliter(hotel);
-    //     var response = runQuery(query);
-    //     response.then((data)=>{
-    //         res.send(data);
-    //     }).catch((err)=>{
-    //         console.log(err);
-    //     });
+    var response = runQuery(query);
+    response.then((data)=>{
+        res.send(data);
+    }).catch((err)=>{
+        console.log(err);
+    });
 })
 
 function formatHotelFilter(filter){
