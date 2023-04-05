@@ -30,16 +30,58 @@ router.get('/hotel_chain', (req, res)=>{
         });
     })
 
-// Get all the hotels 
+// Get all the hotels based on filter
+// If none are selected, returns all hotels without filtering
 router.get('/hotels', (req, res)=>{
-    var query ='select * from hotel';
-        var response = runQuery(query);
-        response.then((data)=>{
-            res.send(data);
-        }).catch((err)=>{
-            console.log(err);
-        });
+    var hotel = {
+        "chain_name": req.query.chain_name.toString().split(','),
+        "star_rating": req.query.star_rating.toString().split(','),
+        "city": req.query.city,
+        "country": req.query.country,
+        "num_rooms": req.query.num_rooms
+    }
+    var query = `
+    select * from 
+    hotel, 
+    (select count(room.room_number) as num_rooms, hotel_id from hotel join room using(hotel_id) group by hotel_id) 
+    as room_num where room_num.hotel_id = hotel.hotel_id and `+ formatHotelFilter(hotel);
+    console.log(query);
+    // var query = 'select count(room_id) as no_room, hotel_id from hotel join room using (hotel_id) group by hotel_id'
+    // Get the hotels baesd on filter
+    // var query ='select * from hotel () where '+ formatHotelFliter(hotel);
+    //     var response = runQuery(query);
+    //     response.then((data)=>{
+    //         res.send(data);
+    //     }).catch((err)=>{
+    //         console.log(err);
+    //     });
 })
+
+function formatHotelFilter(filter){
+    var formatted = '';
+    for(var key in filter){
+        // if item is of type array and is not empty
+        if(Array.isArray(filter[key]) && filter[key][0]){
+            formatted += key + ' in ('
+            for(var val of filter[key]){
+                formatted += `'${val}',`
+            }
+            formatted= formatted.substring(0,formatted.length-1)+') and '
+        }
+        else if(filter[key]){
+            if(key =='num_rooms'){
+                formatted += key + " < '" + filter[key]+ "' and ";
+                console.log(formatted)
+            }
+            else{
+                formatted += key + " = '" + filter[key] + "' and ";
+            }
+        }
+    }
+    formatted = formatted.substring(0, formatted.length-5);
+    return formatted;
+}
+
 // List all the hotels for a hotel chain
 router.get('/hotel_chain/:chain_name', (req, res)=>{
         var query ='select hotel_id from hotel where chain_name ='+req.params.chain_name;
@@ -83,7 +125,6 @@ router.get('/hotel/:hotel_id', (req, res)=>{
         console.log(err);
     });
 })
-
 
 // Get all the rooms for a hotel (Uses req.query https://stackoverflow.com/questions/20089582/how-to-get-a-url-parameter-in-express)
 router.get('/hotel/:hotel_id/rooms', (req, res)=>{
@@ -167,8 +208,6 @@ router.get('/available_rooms', (req, res)=>{
         wifi: req.query.amenities.wifi,
         air_conditioner: req.query.amenities.air_conditioner,
         extendable: req.query.extendable,
-        star_rating: req.query.star_rating.toString().split(','),
-        hotel_chain: req.query.hotel_chain.toString().split(','),
         views: req.query.views.toString().split(','),
         city: req.query.city.toString().split(','),
         room_capacity: req.query.room_capacity.toString().split(','),
