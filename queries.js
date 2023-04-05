@@ -66,7 +66,7 @@ function formatHotelFilter(filter){
         }
         else if(filter[key]){
             if(key =='num_rooms'){
-                formatted += key + " < '" + filter[key]+ "' and ";
+                formatted += key + " > '" + filter[key]+ "' and ";
                 console.log(formatted)
             }
             else{
