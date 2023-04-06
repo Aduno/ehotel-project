@@ -64,11 +64,11 @@ router.post('/user', (req, res) => {
     let currentMonth = String(date.getMonth()+1).padStart(2,"0");
     let currentYear = date.getFullYear();
     let currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
-    var values = formatted(req.query.first_name, req.query.last_name,
-        req.query.phone_number, req.query.email, req.query.country,
-        req.query.city, req.query.street_name, req.query.unit_number,
-        req.query.sin, currentDate);
-    if(req.query.unit_number){
+    var values = format(req.body.first_name, req.body.last_name,
+        req.body.phone_number, req.body.email, req.body.country,
+        req.body.city, req.body.street_name, req.body.unit_number,
+        req.body.sin, req.body.password, currentDate);
+    if(req.body.unit_number){
         var query = `
         insert into customer(first_name, last_name, 
             phone_number, email, address_country, address_city,
