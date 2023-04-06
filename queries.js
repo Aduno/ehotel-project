@@ -177,11 +177,11 @@ router.get('/available_rooms', (req, res)=>{
         start_date: req.query.start_date,
         end_date: req.query.end_date,
         tv: req.query.amenities.tv,
-        room_service: req.query.amenities.tv,
+        room_service: req.query.amenities.rooom_service,
         fridge: req.query.amenities.fridge,
         wifi: req.query.amenities.wifi,
         air_conditioner: req.query.amenities.air_conditioner,
-        extendable: req.query.extendable,
+        extendable: req.query.amenities.extendable,
         views: req.query.views.toString().split(','),
         room_capacity: req.query.room_capacity.toString().split(','),
     }

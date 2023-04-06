@@ -108,6 +108,7 @@ router.post('/employee', (req, res) => {
     Position VARCHAR(30) NOT NULL,
     First_name VARCHAR(30) NOT NULL,
     Last_name VARCHAR(30) NOT NULL,
+    Email VARCHAR(30) NOT NULL UNIQUE,
     Password VARCHAR(30) NOT NULL CHECK(LENGTH(Password)>5),
     Phone_number VARCHAR(15) CHECK(phone_number ~ '^\\d{1,2}-\\d{3}-\\d{3}-\\d{4}$'),
     Salary NUMERIC(10,2) NOT NULL CHECK (Salary>0.0),
