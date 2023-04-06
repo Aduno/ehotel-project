@@ -8,15 +8,19 @@ router.use(upload.array());
 // ** Routes ** //
 // I know this is not proper authentication but for the development of the project, we'll keep it simple
 router.get('/customer/login' ,(req, res)=>{
-        checkLogin(req.body.username, req.body.password, false).then(isValid=>{
-            if(isValid) res.send("Success");
-            else res.send("Failed");
+        checkLogin(req.body.email, req.body.password, false).then(result=>{
+             res.send(result);
+        })
+        .catch((err)=>{
+            res.send(err);
         })
     });
 router.get('/employee/login', (req, res)=>{
-        checkLogin(req.body.username, req.body.password, true).then(isValid=>{
-            if(isValid) res.send("Success");
-            else res.send("Failed");
+        checkLogin(req.body.email, req.body.password, true).then(result=>{
+                res.send(result);
+        })
+        .catch((err)=>{
+            res.send(err);
         })
     });
 // Get all the names hotel chains
@@ -183,7 +187,7 @@ router.get('/available_rooms', (req, res)=>{
         air_conditioner: req.query.amenities.air_conditioner,
         extendable: req.query.amenities.extendable,
         views: req.query.views.toString().split(','),
-        capacity: req.query.room_capacity.toString().split(','),
+        capacity: req.query.room_capacity.toString().split(',')
     }
     query = 'SELECT * from room where '+ formatFilter(filter);
     var response = runQuery(query);
@@ -225,21 +229,21 @@ router.get('/available_rooms/:city', (req, res)=>{
 function checkLogin(username, password, isEmployee){
     return new Promise((resolve, reject)=>{
         if(isEmployee){
-            var query = 'select COUNT(1) as exist from employee where employee_id=\''+username+'\' and password=\''+password+'\'';
+            var query = 'select employeeID as exist from employee where email=\''+username+'\' and password=\''+password+'\'';
         }
         else{
-            var query ='select COUNT(1) as exist from customer where customer_id=\''+username+'\' and password=\''+password+'\'';
+            var query ='select customer_id as exist from customer where email=\''+username+'\' and password=\''+password+'\'';
         }
         var response = runQuery(query);
         response.then((data)=>{
-            if(data['rows'][0]['exist']==0){
-                resolve(false);
+            if(data['rows'][0]['exist']){
+                resolve(data['rows'][0]['exist']);
             }else{
-                resolve(true);
+                reject("Invalid username or password");
             }
         }).catch((err)=>{
             console.log(err);
-            resolve(false);
+            resolve("Invalid username or password");
         })
     })
 }
