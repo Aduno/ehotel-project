@@ -253,10 +253,103 @@ router.post('/renting_archive', (req, res) => {//Are we sure we only need rentin
         });
 });
 
+router.post('/views/:city', (req, res) => {
+    var city = req.params.city.toString().replace(' ','_');
+    var query = `
+        CREATE VIEW ${city}_Capacity AS 
+        SELECT count(room_number) as available_rooms from hotel 
+        join room using(hotel_id) where City = ${city}
+        `;
+    var response = runQuery(query);
+    response.then(result => {
+        res.send(result);
+    }).catch(err => {
+        console.log(err);
+        res.sendStatus(500);
+    });
+})
+
+router.post('trigger_functions', (req, res) => {
+    var query = `
+    CREATE OR REPLACE FUNCTION archive_booking()
+    RETURNS TRIGGER 
+    LANGUAGE PLPGSQL
+    AS
+    $$
+    BEGIN
+        INSERT INTO booking_archive
+        VALUES(NEW.booking_start_date, NEW.booking_end_date,
+            NEW.booking_id, NEW.customer_id, NEW.room_number,
+            NEW.hotel_id, NEW.chain_name);
+    END;
+    $$
+    `   
+    runQuery(query).then(result => {
+        console.log("Successfully created booking archive function");
+    }).catch(err => {
+        console.log("Failed to create booking function");
+        res.sendStatus(500);
+    });
+    query = 
+    `
+    CREATE OR REPLACE FUNCTION archive_renting()
+    RETURNS TRIGGER 
+    LANGUAGE PLPGSQL
+    AS
+    $$
+    BEGIN
+        IF NEW.booking_id is not null 
+        THEN
+            INSERT INTO renting_archive
+            VALUES(NEW.renting_start_date, NEW.renting_end_date,
+                NEW.renting_id, NEW.customer_id, NEW.room_number,
+                NEW.hotel_id, NEW.booking_ID, NEW.chain_name);
+        ELSE
+            INSERT INTO renting_archive
+            VALUES(NEW.renting_start_date, NEW.renting_end_date,
+                NEW.renting_id, NEW.customer_id, NEW.room_number,
+                NEW.hotel_id, NEW.chain_name);
+        END IF;
+    END;
+    $$  
+    `
+    runQuery(query).then(result => {
+        console.log("Successfully created renting archive function");
+        res.sendStatus(200);
+    }).catch(err => {
+        console.log("Failed to create renting function");
+        res.sendStatus(500);
+    });
+})
 router.post('/triggers', (req, res) => {
     var query = `
-        CREATE TRIGGER 
+    CREATE TRIGGER booking_trigger AFTER insert OR update on booking
+    FOR EACH ROW 
+    EXECUTE PROCEDURE archive_booking()
     `
+    runQuery(query)
+        .then(result => {
+            console.log('Booking Archive trigger created successfully')
+        })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);  
+        });
+
+    query = `
+    CREATE TRIGGER rent_trigger AFTER insert OR update on renting
+    FOR EACH ROW 
+    EXECUTE PROCEDURE archive_renting()
+    `
+    runQuery(query)
+    .then(result => {
+        console.log('Renting Archive trigger created successfully')
+        res.sendStatus(200);
+    })
+    .catch(err => {
+        console.log(err);
+        res.sendStatus(500);  
+    });
 });
 // Create a new employee
 module.exports = router;
