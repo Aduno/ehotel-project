@@ -189,7 +189,18 @@ router.get('/available_rooms', (req, res)=>{
         air_conditioner: req.query.amenities? [req.query.amenities.ac, 'amenity']: null,
         extendable: req.query.amenities? [req.query.amenities.extendable, 'extendability']: null
     }
-    query = 'SELECT * from room join booking using (room_number) where '+ formatFilter(filter);
+    if(filter.booking_start_date!=null && filter.booking_end_date!=null){
+        query = `
+        SELECT room_number
+        FROM room
+        WHERE room.room_number NOT IN (
+            SELECT room_number
+            FROM booking
+            WHERE ${booking_start_date}, ${booking_end_date} OVERLAPS booking_start_date, booking_end_date
+        )
+        `
+    }
+    query = 'SELECT * from room where '+ formatFilter(filter);
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
@@ -311,10 +322,10 @@ function formatFilter(filter){
             }
             // Behaviour for range queries
             else if(key=="min_price"){
-                query+= 'and price>= CAST('+ filter[key]+' as MONEY)';
+                query+= ' and price>= CAST('+ filter[key]+' as MONEY)';
             }
             else if(key == "max_price"){
-                query+= 'and price<= CAST('+filter[key]+' as MONEY)';
+                query+= ' and price<= CAST('+filter[key]+' as MONEY)';
             }
             else if(key=="booking_start_date"){
                 query+= ' and ' + key+'>=\''+filter[key] + '\'';
