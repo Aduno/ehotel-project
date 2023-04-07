@@ -189,7 +189,7 @@ router.get('/available_rooms', (req, res)=>{
         air_conditioner: req.query.amenities? [req.query.amenities.ac, 'amenity']: null,
         extendable: req.query.amenities? [req.query.amenities.extendable, 'extendability']: null
     }
-    query = 'SELECT * from room where '+ formatFilter(filter);
+    query = 'SELECT * from room join booking using (room_number) where '+ formatFilter(filter);
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
@@ -317,10 +317,10 @@ function formatFilter(filter){
                 query+= 'and price<= CAST('+filter[key]+' as MONEY)';
             }
             else if(key=="booking_start_date"){
-                query+= ' and ' + key+'>='+filter[key];
+                query+= ' and ' + key+'>=\''+filter[key] + '\'';
             }
             else if(key=="booking_end_date"){
-                query+= ' and ' + key+'<='+filter[key];
+                query+= ' and ' + key+'<=\''+filter[key] + '\'';
             }
         }
     }
