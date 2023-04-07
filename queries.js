@@ -186,7 +186,7 @@ router.get('/available_rooms', (req, res)=>{
         room_service: req.query.amenities? [req.query.amenities.room_service, 'amenity']: null, 
         fridge: req.query.amenities? [req.query.amenities.fridge, 'amenity']: null,
         wifi: req.query.amenities? [req.query.amenities.wifi, 'amenity']: null,
-        air_conditioner: req.query.amenities? [req.query.amenities.air_conditioner, 'amenity']: null,
+        air_conditioner: req.query.amenities? [req.query.amenities.ac, 'amenity']: null,
         extendable: req.query.amenities? [req.query.amenities.extendable, 'extendability']: null
     }
     query = 'SELECT * from room where '+ formatFilter(filter);
