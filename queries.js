@@ -189,18 +189,14 @@ router.get('/available_rooms', (req, res)=>{
         air_conditioner: req.query.amenities? [req.query.amenities.ac, 'amenity']: null,
         extendable: req.query.amenities? [req.query.amenities.extendable, 'extendability']: null
     }
-    if(filter.booking_start_date!=null && filter.booking_end_date!=null){
-        query = `
-        SELECT room_number
-        FROM room
-        WHERE room.room_number NOT IN (
-            SELECT room_number
-            FROM booking
-            WHERE ${booking_start_date}, ${booking_end_date} OVERLAPS booking_start_date, booking_end_date
-        )
-        `
-    }
-    query = 'SELECT * from room where '+ formatFilter(filter);
+    query = `
+    SELECT * from room 
+    WHERE room.room_number 
+    NOT IN(SELECT room_number FROM booking 
+    WHERE ${booking_start_date}, ${booking_end_date} 
+    OVERLAPS booking_start_date, booking_end_date) 
+    and 
+    `+ formatFilter(filter);
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
