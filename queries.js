@@ -180,14 +180,14 @@ router.get('/available_rooms', (req, res)=>{
         max_price: req.query.max_price,
         booking_start_date: req.query.start_date,
         booking_end_date: req.query.end_date,
-        tv: req.query.amenities.tv,
-        room_service: req.query.amenities.room_service,
-        fridge: req.query.amenities.fridge,
-        wifi: req.query.amenities.wifi,
-        air_conditioner: req.query.amenities.air_conditioner,
-        extendable: req.query.amenities.extendable,
-        views: req.query.views.toString().split(','),
-        capacity: req.query.room_capacity.toString().split(',')
+        tv: req.query.amenities? req.query.amenities.tv : null,
+        room_service: req.query.amenities? req.query.amenities.room_service: null, 
+        fridge: req.query.amenities? req.query.amenities.fridge: null,
+        wifi: req.query.amenities? req.query.amenities.wifi: null,
+        air_conditioner: req.query.amenities? req.query.amenities.air_conditioner: null,
+        extendable: req.query.amenities? req.query.amenities.extendable: null,
+        views: req.query.views? req.query.views.toString().split(','): null,
+        capacity: req.query.room_capacity? req.query.room_capacity.toString().split(','): null
     }
     query = 'SELECT * from room where '+ formatFilter(filter);
     var response = runQuery(query);
