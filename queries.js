@@ -292,19 +292,22 @@ function formatFilter(filter){
                 query+= ' and '+key+' IN ('+ formattedList + ')';
             }
             else if(filter[key] instanceof Array){
-                if(filter[key][0] && filter[key][1]=='amenity'){ // if not empty (Doesnt work if i put it in the upper if statement as an && for some reaon)
-                    if(firstOR){
+                if(filter[key][0]){ // if not empty (Doesnt work if theres anything else in the if statement)
+                    if(filter[key][1]=='amenity'){
+                        if(firstOR){
                         query += ' and '
+                        }
+                        else{
+                            query += ' or '
+                        }
+                        query += key +'='+filter[key][0];
+                        firstOR = false;
                     }
                     else{
-                        query += ' or '
+                        query+= ' and '+key+'='+filter[key][0];
                     }
-                    query += key +'='+filter[key][0];
-                    firstOR = false;
                 }
-                else{
-                    query+= ' and '+key+'='+filter[key][0];
-                }
+                
             }
             // Behaviour for range queries
             else if(key=="min_price"){
