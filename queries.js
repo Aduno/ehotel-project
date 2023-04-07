@@ -180,14 +180,14 @@ router.get('/available_rooms', (req, res)=>{
         max_price: req.query.max_price,
         booking_start_date: req.query.start_date,
         booking_end_date: req.query.end_date,
+        view: req.query.views? [req.query.views.toString().split(','), 'views']: null,
+        capacity: req.query.room_capacity? [req.query.room_capacity.toString().split(','), 'capacity']: null,
         tv: req.query.amenities? [req.query.amenities.tv, 'amenity'] : null,
         room_service: req.query.amenities? [req.query.amenities.room_service, 'amenity']: null, 
         fridge: req.query.amenities? [req.query.amenities.fridge, 'amenity']: null,
         wifi: req.query.amenities? [req.query.amenities.wifi, 'amenity']: null,
         air_conditioner: req.query.amenities? [req.query.amenities.air_conditioner, 'amenity']: null,
-        extendable: req.query.amenities? [req.query.amenities.extendable, 'extendability']: null,
-        view: req.query.views? [req.query.views.toString().split(','), 'views']: null,
-        capacity: req.query.room_capacity? [req.query.room_capacity.toString().split(','), 'capacity']: null
+        extendable: req.query.amenities? [req.query.amenities.extendable, 'extendability']: null
     }
     query = 'SELECT * from room where '+ formatFilter(filter);
     var response = runQuery(query);
@@ -295,7 +295,7 @@ function formatFilter(filter){
                 if(filter[key][0]){ // if not empty (Doesnt work if theres anything else in the if statement)
                     if(filter[key][1]=='amenity'){
                         if(firstOR){
-                        query += ' and '
+                        query += ' and ('
                         }
                         else{
                             query += ' or '
