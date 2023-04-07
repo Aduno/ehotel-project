@@ -180,14 +180,14 @@ router.get('/available_rooms', (req, res)=>{
         max_price: req.query.max_price,
         booking_start_date: req.query.start_date,
         booking_end_date: req.query.end_date,
-        tv: req.query.amenities? req.query.amenities.tv : null,
-        room_service: req.query.amenities? req.query.amenities.room_service: null, 
-        fridge: req.query.amenities? req.query.amenities.fridge: null,
-        wifi: req.query.amenities? req.query.amenities.wifi: null,
-        air_conditioner: req.query.amenities? req.query.amenities.air_conditioner: null,
-        extendable: req.query.amenities? req.query.amenities.extendable: null,
-        view: req.query.views? req.query.views.toString().split(','): null,
-        capacity: req.query.room_capacity? req.query.room_capacity.toString().split(','): null
+        tv: req.query.amenities? [req.query.amenities.tv, 'amenity'] : null,
+        room_service: req.query.amenities? [req.query.amenities.room_service, 'amenity']: null, 
+        fridge: req.query.amenities? [req.query.amenities.fridge, 'amenity']: null,
+        wifi: req.query.amenities? [req.query.amenities.wifi, 'amenity']: null,
+        air_conditioner: req.query.amenities? [req.query.amenities.air_conditioner, 'amenity']: null,
+        extendable: req.query.amenities? [req.query.amenities.extendable, 'extendability']: null,
+        view: req.query.views? [req.query.views.toString().split(','), 'views']: null,
+        capacity: req.query.room_capacity? [req.query.room_capacity.toString().split(','), 'capacity']: null
     }
     query = 'SELECT * from room where '+ formatFilter(filter);
     var response = runQuery(query);
@@ -280,32 +280,47 @@ function formatHotelFilter(filter){
 // Sorry for this abomination of code lol
 function formatFilter(filter){
     var query = '';
+    var firstOR = true;
     for(var key in filter){
         if(filter[key]){
-            if(filter[key] instanceof Array){
-                if(filter[key][0]){
-                    var formattedList = sqlFormatList(filter[key])
-                    query+= key+' IN ('+ formattedList + ') and ';
+            if(key == 'hotel_id'){
+                query+= 'hotel_id='+filter[key];
+            }
+            // Behaviour for list queries
+            if(filter[key][0] instanceof Array && filter[key][0].length>0){
+                var formattedList = sqlFormatList(filter[key][0])
+                query+= ' and '+key+' IN ('+ formattedList + ')';
+            }
+            else if(filter[key] instanceof Array){
+                if(filter[key][0] && filter[key][1]=='amenity'){ // if not empty (Doesnt work if i put it in the upper if statement as an && for some reaon)
+                    if(firstOR){
+                        query += ' and '
+                    }
+                    else{
+                        query += ' or '
+                    }
+                    query += key +'='+filter[key][0];
+                    firstOR = false;
+                }
+                else{
+                    query+= ' and '+key+'='+filter[key][0];
                 }
             }
+            // Behaviour for range queries
             else if(key=="min_price"){
-                query+= 'price>= CAST('+ filter[key]+' as MONEY) and ';
+                query+= 'and price>= CAST('+ filter[key]+' as MONEY)';
             }
             else if(key == "max_price"){
-                query+= 'price<= CAST('+filter[key]+' as MONEY) and ';
+                query+= 'and price<= CAST('+filter[key]+' as MONEY)';
             }
             else if(key=="start_date"){
-                query+= key+'>='+filter[key]+' and ';
+                query+= ' and ' + key+'>='+filter[key];
             }
             else if(key=="end_date"){
-                query+= key+'<='+filter[key]+' and ';
-            }
-            else{
-                query+= key+'='+filter[key]+' and ';
+                query+= ' and ' + key+'<='+filter[key];
             }
         }
     }
-    query = query.substring(0, query.length-5);
     return query;
 }
 
