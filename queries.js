@@ -316,10 +316,10 @@ function formatFilter(filter){
             else if(key == "max_price"){
                 query+= 'and price<= CAST('+filter[key]+' as MONEY)';
             }
-            else if(key=="start_date"){
+            else if(key=="booking_start_date"){
                 query+= ' and ' + key+'>='+filter[key];
             }
-            else if(key=="end_date"){
+            else if(key=="booking_end_date"){
                 query+= ' and ' + key+'<='+filter[key];
             }
         }
