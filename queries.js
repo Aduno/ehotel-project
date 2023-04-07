@@ -324,6 +324,9 @@ function formatFilter(filter){
             }
         }
     }
+    if(!firstOR){
+        query+=')';
+    }
     return query;
 }
 
