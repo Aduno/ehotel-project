@@ -311,9 +311,8 @@ function formatFilter(filter){
 
 function sqlFormatList(list){
     var formatted = '';
-    for(var item of list){
-        console.log(item);
-        formatted+= `'${item}',`;
+    for(var item of list){        
+        formatted+= `'${String(item).toLowerCase()}',`;
     }
     return formatted.substring(0, formatted.length-1);
 }
