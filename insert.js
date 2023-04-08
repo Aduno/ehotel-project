@@ -7,12 +7,12 @@ const { runQuery } = require('./database');
 // Function to quickly format the insert into values
 function format(){
     var formatted = "("
-    for(var i=0; i<arguments.length-1;i++){
+    for(var i=0; i<arguments.length;i++){
         if(arguments[i]){
-            formatted+=arguments[i] +',';
+            formatted+=`'${arguments[i]}',`;
         }
     }
-    formatted+= (formatted[arguments.length-1]+")")
+    formatted= (formatted.substring(0, formatted.length-1)+")")
     return formatted;
 }
 
@@ -65,14 +65,14 @@ router.post('/user', (req, res) => {
     let currentYear = date.getFullYear();
     let currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
     var values = format(req.body.first_name, req.body.last_name,
-        req.body.phone_number, req.body.email, req.body.country,
-        req.body.city, req.body.street_name, req.body.unit_number,
-        req.body.sin, req.body.password, currentDate);
+        req.body.phone_number, req.body.email, req.body.address_country,
+        req.body.address_city, req.body.address_street_name, req.body.address_street_number, req.body.address_unit_number,
+        req.body.ssn_sin, req.body.password, currentDate);
     if(req.body.unit_number){
         var query = `
         insert into customer(first_name, last_name, 
             phone_number, email, address_country, address_city,
-            address_street_name, address_unit_number, ssn_sin,
+            address_street_name, address_street_number address_unit_number, ssn_sin, password,
             registration_date) 
             values ` + values;
     }
@@ -80,7 +80,7 @@ router.post('/user', (req, res) => {
         var query = `
         insert into customer(first_name, last_name, 
             phone_number, email, address_country, address_city,
-            address_street_name, ssn_sin,
+            address_street_name, address_street_number, ssn_sin, password,
             registration_date) 
             values ` + values;
     }
