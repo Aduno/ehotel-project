@@ -84,11 +84,11 @@ router.post('/user', (req, res) => {
         phone_number, req.body.email, req.body.address_country,
         req.body.address_city, req.body.address_street_name, req.body.address_street_number, req.body.address_unit_number,
         req.body.ssn_sin, req.body.password, currentDate);
-    if(req.body.unit_number){
+    if(req.body.address_unit_number){
         var query = `
         insert into customer(first_name, last_name, 
             phone_number, email, address_country, address_city,
-            address_street_name, address_street_number address_unit_number, ssn_sin, password,
+            address_street_name, address_street_number, address_unit_number, ssn_sin, password,
             registration_date) 
             values ` + values;
     }
