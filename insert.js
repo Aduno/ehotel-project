@@ -22,7 +22,7 @@ function format_phone_number(number){
         return null;
     }
     var area_code = split_number[0];
-    var phone_number = split_number[1].substring(0,3) + '-' + split_number[1].substring(3,7) + '-' + split_number[1].substring(7,11);
+    var phone_number = split_number[1].substring(0,3) + '-' + split_number[1].substring(3,6) + '-' + split_number[1].substring(6,11);
     return area_code + '-' + phone_number;
 }
 
