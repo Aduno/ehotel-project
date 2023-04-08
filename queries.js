@@ -193,8 +193,8 @@ router.get('/available_rooms', (req, res)=>{
     SELECT * from room 
     WHERE room.room_number 
     NOT IN(SELECT room_number FROM booking 
-    WHERE ${booking_start_date}, ${booking_end_date} 
-    OVERLAPS booking_start_date, booking_end_date) 
+    WHERE ('${booking_start_date}', '${booking_end_date}')
+    OVERLAPS (booking_start_date, booking_end_date))
     and 
     `+ formatFilter(filter);
     var response = runQuery(query);
