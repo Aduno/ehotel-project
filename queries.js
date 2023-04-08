@@ -236,7 +236,7 @@ router.get('/available_rooms/:city', (req, res)=>{
 function checkLogin(username, password, isEmployee){
     return new Promise((resolve, reject)=>{
         if(isEmployee){
-            var query = 'select employeeID as exist from employee where email=\''+username+'\' and password=\''+password+'\'';
+            var query = 'select employeeID, managerID, hotel_ID as exist from employee where email=\''+username+'\' and password=\''+password+'\'';
         }
         else{
             var query ='select customer_id as exist from customer where email=\''+username+'\' and password=\''+password+'\'';
@@ -294,7 +294,7 @@ function formatFilter(filter){
                 query+= 'hotel_id='+filter[key];
             }
             // Behaviour for list queries
-            if(filter[key][0] instanceof Array && filter[key][0].length>0){
+            else if(filter[key][0] instanceof Array && filter[key][0].length>0){
                 var formattedList = sqlFormatList(filter[key][0])
                 query+= ' and '+key+' IN ('+ formattedList + ')';
             }
@@ -323,10 +323,7 @@ function formatFilter(filter){
             else if(key == "max_price"){
                 query+= ' and price<= CAST('+filter[key]+' as MONEY)';
             }
-            else if(key=="booking_start_date"){
-                continue;
-            }
-            else if(key=="booking_end_date"){
+            else if(key=="booking_start_date" || key=="booking_end_date"){
                 continue;
             }
         }
