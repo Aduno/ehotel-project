@@ -81,7 +81,7 @@ router.post('/user', (req, res) => {
     }
 
     var values = format(req.body.first_name, req.body.last_name,
-        req.body.phone_number, req.body.email, req.body.address_country,
+        phone_number, req.body.email, req.body.address_country,
         req.body.address_city, req.body.address_street_name, req.body.address_street_number, req.body.address_unit_number,
         req.body.ssn_sin, req.body.password, currentDate);
     if(req.body.unit_number){
