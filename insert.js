@@ -15,6 +15,16 @@ function format(){
     formatted= (formatted.substring(0, formatted.length-1)+")")
     return formatted;
 }
+// Function for parsing out information and properly formatting the phone number
+function format_phone_number(number){
+    var split_number = number.split('-');
+    if(split_number[1].length>10){ // Validate the phone number
+        return null;
+    }
+    var area_code = split_number[0];
+    var phone_number = split_number[1].substring(0,3) + '-' + split_number[1].substring(3,7) + '-' + split_number[1].substring(7,11);
+    return area_code + '-' + phone_number;
+}
 
 // Add a booking 
 router.post('/book',(req,res)=>{
@@ -64,6 +74,12 @@ router.post('/user', (req, res) => {
     let currentMonth = String(date.getMonth()+1).padStart(2,"0");
     let currentYear = date.getFullYear();
     let currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
+
+    let phone_number = format_phone_number(req.body.phone_number);
+    if(!phone_number){ // If the phone number is not valid
+        res.send("Invalid phone number");
+    }
+
     var values = format(req.body.first_name, req.body.last_name,
         req.body.phone_number, req.body.email, req.body.address_country,
         req.body.address_city, req.body.address_street_name, req.body.address_street_number, req.body.address_unit_number,
