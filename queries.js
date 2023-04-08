@@ -324,10 +324,10 @@ function formatFilter(filter){
                 query+= ' and price<= CAST('+filter[key]+' as MONEY)';
             }
             else if(key=="booking_start_date"){
-                query+= ' and ' + key+'>=\''+filter[key] + '\'';
+                continue;
             }
             else if(key=="booking_end_date"){
-                query+= ' and ' + key+'<=\''+filter[key] + '\'';
+                continue;
             }
         }
     }
