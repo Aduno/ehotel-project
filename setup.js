@@ -163,6 +163,7 @@ router.post('/booking', (req, res) => {
     Customer_ID SERIAL NOT NULL,
     Booking_start_date DATE NOT NULL,
     Booking_end_date DATE NOT NULL,
+    hotel_id INT NOT NULL,
     Room_number INT NOT NULL,
     CHECK (Booking_start_date <= Booking_end_date),
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
