@@ -244,7 +244,6 @@ function checkLogin(username, password, isEmployee){
         var response = runQuery(query);
         response.then((data)=>{
             if(data['rows'][0]){
-                console.log(data)
                 resolve(data);
             }else{
                 reject("Invalid username or password");
