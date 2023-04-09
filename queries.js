@@ -7,7 +7,8 @@ router.use(upload.array());
 
 // ** Routes ** //
 // I know this is not proper authentication but for the development of the project, we'll keep it simple
-router.get('/customer/login' ,(req, res)=>{
+router.post('/customer/login' ,(req, res)=>{
+        console.log(req.body)
         checkLogin(req.body.email, req.body.password, false).then(result=>{
              res.send(result);
         })
@@ -15,7 +16,7 @@ router.get('/customer/login' ,(req, res)=>{
             res.send(err);
         })
     });
-router.get('/employee/login', (req, res)=>{
+router.post('/employee/login', (req, res)=>{
         checkLogin(req.body.email, req.body.password, true).then(result=>{
                 res.send(result);
         })
