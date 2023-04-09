@@ -12,7 +12,7 @@ router.post('/customer/login' ,(req, res)=>{
              res.send(result);
         })
         .catch((err)=>{
-            res.send(err);
+            res.sendStatus(401);
         })
     });
 router.post('/employee/login', (req, res)=>{
