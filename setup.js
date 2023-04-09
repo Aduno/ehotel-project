@@ -163,7 +163,6 @@ router.post('/booking', (req, res) => {
     Customer_ID SERIAL NOT NULL,
     Booking_start_date DATE NOT NULL,
     Booking_end_date DATE NOT NULL,
-    hotel_id INT NOT NULL,
     Room_number INT NOT NULL,
     CHECK (Booking_start_date <= Booking_end_date),
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
@@ -280,11 +279,13 @@ router.post('trigger_functions', (req, res) => {
     LANGUAGE PLPGSQL
     AS
     $$
+    DECLARE var_chain_name VARCHAR(30) := (SELECT chain_name FROM hotel WHERE hotel_id = NEW.hotel_id);
     BEGIN
         INSERT INTO booking_archive
         VALUES(NEW.booking_start_date, NEW.booking_end_date,
             NEW.booking_id, NEW.customer_id, NEW.room_number,
-            NEW.hotel_id, NEW.chain_name);
+            NEW.hotel_id, var_chain_name);
+        RETURN NULL;
     END;
     $$
     `   

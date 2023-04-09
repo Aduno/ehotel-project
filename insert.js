@@ -29,7 +29,7 @@ function format_phone_number(number){
 // Add a booking 
 router.post('/book',(req,res)=>{
     // MAKE A SEPARATE FUNCTION FOR THIS AND IN THE MAIN FUNCTION HERE, CHECK THAT BOTH PROMISES SUCCESSFULLY FINISHES
-    var values = format(req.query.hotelID, req.query.roomNumber, req.query.customerID, req.query.start, req.query.end);
+    var values = format(req.body.hotelID, req.body.roomNumber, req.body.customerID, req.body.start, req.body.end);
     var insert = 'insert into booking(hotel_id, room_number, customer_id, booking_start_date, booking_end_date) values '+ values;
     var response = runQuery(insert);
     response.
@@ -38,6 +38,7 @@ router.post('/book',(req,res)=>{
             res.send(result);
         }).
         catch((err) => {
+            console.log(err)
             console.log("Failed to create booking");
             res.sendStatus(500);
         });
