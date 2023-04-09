@@ -8,7 +8,6 @@ router.use(upload.array());
 // ** Routes ** //
 // I know this is not proper authentication but for the development of the project, we'll keep it simple
 router.post('/customer/login' ,(req, res)=>{
-        console.log(req.body)
         checkLogin(req.body.email, req.body.password, false).then(result=>{
              res.send(result);
         })
@@ -240,12 +239,13 @@ function checkLogin(username, password, isEmployee){
             var query = 'select employeeID, managerID, hotel_ID as exist from employee where email=\''+username+'\' and password=\''+password+'\'';
         }
         else{
-            var query ='select customer_id as exist from customer where email=\''+username+'\' and password=\''+password+'\'';
+            var query ='select customer_id from customer where email=\''+username+'\' and password=\''+password+'\'';
         }
         var response = runQuery(query);
         response.then((data)=>{
-            if(data['rows'][0]['exist']){
-                resolve(data['rows'][0]['exist']);
+            if(data['rows'][0]){
+                console.log(data)
+                resolve(data);
             }else{
                 reject("Invalid username or password");
             }
