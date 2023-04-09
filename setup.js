@@ -104,7 +104,7 @@ router.post('/room', (req, res) => {//still need to work on the condition of the
 router.post('/employee', (req, res) => {
     const employeeQuery = `
     CREATE TABLE Employee (
-    EmployeeID INT PRIMARY KEY,
+    EmployeeID SERIAL PRIMARY KEY,
     Position VARCHAR(30) NOT NULL,
     First_name VARCHAR(30) NOT NULL,
     Last_name VARCHAR(30) NOT NULL,
