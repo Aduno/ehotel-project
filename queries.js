@@ -171,6 +171,18 @@ router.get('/bookings', (req, res)=>{
     });
 })
 
+router.get('/bookings/past_start_date', (req, res)=>{
+    var query = `
+    SELECT * from booking where booking_start_date >= '${req.params.date}'
+    `;
+    var response = runQuery(query);
+    response.then((data)=>{
+        res.send(data);
+    }).catch((err)=>{
+        console.log(err);
+        res.send(err);
+    });
+})
 // *** Room filter page apis ***
 // Return rooms that are available for use based on the filter
 router.get('/available_rooms', (req, res)=>{
