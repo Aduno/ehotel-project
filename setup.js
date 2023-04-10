@@ -164,7 +164,7 @@ router.post('/booking', (req, res) => {
     Booking_start_date DATE NOT NULL,
     Booking_end_date DATE NOT NULL,
     Room_number INT NOT NULL,
-    CHECK (Booking_start_date <= Booking_end_date),
+    CONSTRAINT date_validation CHECK (Booking_start_date <= Booking_end_date),
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
     FOREIGN KEY (Room_number) REFERENCES Room(Room_number)
     )`;
@@ -274,6 +274,30 @@ router.post('/views/:city', (req, res) => {
 
 router.post('trigger_functions', (req, res) => {
     var query = `
+    CREATE OR REPLACE FUNCTION prevent_booking_overlap()
+    RETURNS TRIGGER
+    LANGUAGE PLPGSQL
+    AS
+    $$
+    BEGIN
+    IF EXISTS (
+        SELECT 1 FROM booking
+        WHERE (NEW.booking_start_date <= booking_end_date) AND (NEW.booking_end_date >= booking_start_date) AND (NEW.room_number = room_number)
+      ) THEN
+        RAISE EXCEPTION 'Date range overlaps with another booking.';
+      ELSE
+        RETURN NEW;
+      END IF;
+    END;
+    $$
+    `
+    runQuery(query).then(result => {
+        console.log("Successfully created booking overlap preventing function");
+    }).catch(err => {
+        console.log("Failed to create booking overlap function");
+        res.sendStatus(500);
+    });
+    var query = `
     CREATE OR REPLACE FUNCTION archive_booking()
     RETURNS TRIGGER 
     LANGUAGE PLPGSQL
@@ -327,6 +351,20 @@ router.post('trigger_functions', (req, res) => {
     });
 })
 router.post('/triggers', (req, res) => {
+    var query = `
+    CREATE TRIGGER booking_overlap_trigger BEFORE insert OR update on booking
+    FOR EACH ROW
+    EXECUTE PROCEDURE prevent_booking_overlap()
+    `
+    runQuery(query)
+        .then(result => {
+            console.log("Booking overlap trigger created successfully")
+        })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        });
+
     var query = `
     CREATE TRIGGER booking_trigger AFTER insert OR update on booking
     FOR EACH ROW 
