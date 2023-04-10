@@ -151,7 +151,7 @@ router.get('/employee/:employee_id', (req, res)=>{
 
 // Get Booking information for a room based on customer_id
 router.get('/bookings/:customer_id', (req, res)=>{
-    var query = 'SELECT * FROM booking where customer_id='+req.params.customer_id;
+    var query = 'SELECT booking.*, hotel.chain_name, price FROM booking join hotel using(hotel_id) join room on room.room_number=booking.room_number where customer_id='+req.params.customer_id;
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
