@@ -173,7 +173,7 @@ router.get('/bookings', (req, res)=>{
 
 router.get('/bookings/past_start_date', (req, res)=>{
     var query = `
-    SELECT * from booking where booking_start_date >= '${req.params.date}'
+    SELECT * from booking where booking_start_date >= '${req.query.date}'
     `;
     var response = runQuery(query);
     response.then((data)=>{
@@ -186,7 +186,7 @@ router.get('/bookings/past_start_date', (req, res)=>{
 
 router.get('/bookings/before_start_date', (req, res)=>{
     var query = `
-    SELECT * from booking where booking_start_date < '${req.params.date}'
+    SELECT * from booking where booking_start_date < '${req.query.date}'
     `;
     var response = runQuery(query);
     response.then((data)=>{
