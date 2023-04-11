@@ -282,7 +282,7 @@ router.post('trigger_functions', (req, res) => {
     BEGIN
     IF EXISTS (
         SELECT 1 FROM booking
-        WHERE (NEW.booking_start_date <= booking_end_date) AND (NEW.booking_end_date >= booking_start_date) AND (NEW.room_number = room_number)
+        WHERE (NEW.booking_start_date < booking_end_date) AND (NEW.booking_end_date >= booking_start_date) AND (NEW.room_number = room_number)
       ) THEN
         RAISE EXCEPTION 'Date range overlaps with another booking.';
       ELSE

@@ -162,7 +162,7 @@ router.get('/bookings/:customer_id', (req, res)=>{
 
 // All bookings 
 router.get('/bookings', (req, res)=>{
-    var query = 'SELECT * FROM booking';
+    var query = 'SELECT booking.*, price, chain_name FROM booking join hotel using(hotel_id) join room using(room_number)';
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
@@ -174,6 +174,19 @@ router.get('/bookings', (req, res)=>{
 router.get('/bookings/past_start_date', (req, res)=>{
     var query = `
     SELECT * from booking where booking_start_date >= '${req.params.date}'
+    `;
+    var response = runQuery(query);
+    response.then((data)=>{
+        res.send(data);
+    }).catch((err)=>{
+        console.log(err);
+        res.send(err);
+    });
+})
+
+router.get('/bookings/before_start_date', (req, res)=>{
+    var query = `
+    SELECT * from booking where booking_start_date < '${req.params.date}'
     `;
     var response = runQuery(query);
     response.then((data)=>{
