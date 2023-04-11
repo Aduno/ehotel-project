@@ -173,7 +173,7 @@ router.get('/bookings', (req, res)=>{
 
 router.get('/booking/past_start_date', (req, res)=>{
     var query = `
-    SELECT * from booking where booking_start_date >= '${req.query.date}'
+    SELECT booking.*, price, chain_name from booking join hotel using(hotel_id) join room using(room_number) where booking_start_date >= '${req.query.date}'
     `;
     var response = runQuery(query);
     response.then((data)=>{
@@ -186,7 +186,32 @@ router.get('/booking/past_start_date', (req, res)=>{
 
 router.get('/booking/before_start_date', (req, res)=>{
     var query = `
-    SELECT * from booking where booking_start_date < '${req.query.date}'
+    SELECT  booking.*, price, chain_name from booking join hotel using(hotel_id) join room using(room_number) where booking_start_date < '${req.query.date}'
+    `;
+    var response = runQuery(query);
+    response.then((data)=>{
+        res.send(data);
+    }).catch((err)=>{
+        console.log(err);
+        res.send(err);
+    });
+})
+
+router.get('/renting/past', (req, res)=>{
+    var query = `
+    SELECT renting.*, price, chain_name from renting join hotel using(hotel_id) join room using(room_number) where renting_end_date >= '${req.query.date}'
+    `;
+    var response = runQuery(query);
+    response.then((data)=>{
+        res.send(data);
+    }).catch((err)=>{
+        console.log(err);
+        res.send(err);
+    });
+})
+router.get('/renting/ongoing', (req, res)=>{
+    var query = `
+    SELECT renting.*, price, chain_name from renting join hotel using(hotel_id) join room using(room_number) where renting_end_date < '${req.query.date}'
     `;
     var response = runQuery(query);
     response.then((data)=>{
