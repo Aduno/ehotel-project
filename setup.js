@@ -8,7 +8,7 @@ const { runQuery } = require('./database');
 router.post('/hotelchain', (req, res) => {
     const chainQuery = `
     CREATE TABLE Hotel_Chain (
-    Chain_Name VARCHAR(30) NOT NULL PRIMARY KEY ON DELETE CASCADE
+    Chain_Name VARCHAR(30) NOT NULL PRIMARY KEY
     )`;
     runQuery(chainQuery)
         .then(result => {
@@ -33,7 +33,7 @@ router.post('/office', (req, res) => {
     City VARCHAR(30) NOT NULL,
     Contact_emails VARCHAR(30),
     Contact_phone_numbers VARCHAR(30),
-    FOREIGN KEY (Chain_Name) REFERENCES Hotel_Chain(Chain_Name)
+    FOREIGN KEY (Chain_Name) REFERENCES Hotel_Chain(Chain_Name) ON DELETE CASECADE
     )`;
     runQuery(officeQuery)
         .then(result => {
@@ -60,7 +60,7 @@ router.post('/hotel', (req, res) => {//here should check the star rating conditi
     Unit_number INT,
     email VARCHAR(30),
     Phone_number VARCHAR(15) CHECK(phone_number ~ '^\\d{1,2}-\\d{3}-\\d{3}-\\d{4}$'),
-    FOREIGN KEY (Chain_Name) REFERENCES Hotel_Chain(Chain_Name)
+    FOREIGN KEY (Chain_Name) REFERENCES Hotel_Chain(Chain_Name) ON DELETE CASCADE
     )`;
     runQuery(hotelQuery)
         .then(result => {
@@ -88,7 +88,7 @@ router.post('/room', (req, res) => {//still need to work on the condition of the
     View VARCHAR(30) CHECK(View IN ('sea view','mountain view','city view')) NOT NULL,
     Extendable BOOLEAN NOT NULL,
     Problems TEXT,
-    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID)
+    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID) ON DELETE CASCADE
     )`;
     runQuery(roomQuery)
         .then(result => {
@@ -112,9 +112,9 @@ router.post('/employee', (req, res) => {
     Password VARCHAR(30) NOT NULL CHECK(LENGTH(Password)>5),
     Phone_number VARCHAR(15) CHECK(phone_number ~ '^\\d{1,2}-\\d{3}-\\d{3}-\\d{4}$'),
     Salary NUMERIC(10,2) NOT NULL CHECK (Salary>0.0),
-    Hotel_ID INT NOT NULL,
+    Hotel_ID INT,
     ManagerID INT,
-    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID),
+    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID) ON DELETE SET NULL,
     FOREIGN KEY (ManagerID) REFERENCES Employee(EmployeeID)
     )`;
     runQuery(employeeQuery)
@@ -169,7 +169,7 @@ router.post('/booking', (req, res) => {
     CONSTRAINT date_validation CHECK (Booking_start_date <= Booking_end_date),
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
     FOREIGN KEY (Room_number) REFERENCES Room(Room_number),
-    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID)
+    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID) ON DELETE CASCADE
     )`;
     runQuery(bookingQuery)
         .then(result => {
@@ -196,7 +196,7 @@ router.post('/renting', (req, res) => {
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
     FOREIGN KEY (Room_number) REFERENCES Room(Room_number),
     FOREIGN KEY (Booking_ID) REFERENCES Booking(Booking_ID),
-    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID)
+    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID) ON DELETE CASCADE
     )`;
     runQuery(rentingQuery)
         .then(result => {
