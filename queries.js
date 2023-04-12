@@ -267,25 +267,22 @@ router.get('cities', (req, res)=>{
         res.sendStatus(500);
     });
 })
-// Gets the capacity of the city
-router.get('/available_rooms/:city', (req, res)=>{
-    var query = 
-    `
-    SELECT * from city_capacity
-    `
+
+// Gets the capacity of all the hotels
+router.get('/hotel_capacities', (req, res)=>{
+    var query = 'SELECT * from hotel_capacity';
     var response = runQuery(query);
     response.then((data)=>{
-        var cities = data['rows'];
-        for(key in cities){
-            var room_query = 
-            `
-            SELECT COUNT(room_number) from room
-            `
-        }
-    }).catch((err)=>{
+        res.send(data);
+    })
+    .catch((err)=>{
         console.log(err);
         res.sendStatus(500);
     })
+})
+// Gets the capacity of the city
+router.get('/available_rooms/:city', (req, res)=>{
+
 })
 // ** Query Functions ** //
 function checkLogin(username, password, isEmployee){

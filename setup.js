@@ -8,7 +8,7 @@ const { runQuery } = require('./database');
 router.post('/hotelchain', (req, res) => {
     const chainQuery = `
     CREATE TABLE Hotel_Chain (
-    Chain_Name VARCHAR(30) NOT NULL PRIMARY KEY
+    Chain_Name VARCHAR(30) NOT NULL PRIMARY KEY ON DELETE CASCADE
     )`;
     runQuery(chainQuery)
         .then(result => {
