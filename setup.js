@@ -261,12 +261,12 @@ router.post('/renting_archive', (req, res) => {//Are we sure we only need rentin
         });
 });
 
-router.post('/views/:city', (req, res) => {
-    var city = req.params.city.toString().replace(' ','_');
+router.post('/views/city', (req, res) => {
     var query = `
-        CREATE VIEW ${city}_Capacity AS 
-        SELECT count(room_number) as available_rooms from hotel 
-        join room using(hotel_id) where City = ${city}
+        CREATE VIEW City_Capacity AS
+        SELECT City, COUNT(room_number) AS available_rooms
+        FROM hotel JOIN room USING(hotel_id)
+        GROUP BY City;
         `;
     var response = runQuery(query);
     response.then(result => {
