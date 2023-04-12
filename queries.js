@@ -304,7 +304,7 @@ router.get('/available_rooms/:city', (req, res)=>{
 function checkLogin(username, password, isEmployee){
     return new Promise((resolve, reject)=>{
         if(isEmployee){
-            var query = 'select employeeID, managerID, hotel_ID as exist from employee where email=\''+username+'\' and password=\''+password+'\'';
+            var query = 'select employeeID, managerID, hotel_ID from employee where email=\''+username+'\' and password=\''+password+'\'';
         }
         else{
             var query ='select customer_id from customer where email=\''+username+'\' and password=\''+password+'\'';

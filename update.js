@@ -20,11 +20,24 @@ router.post('/booking/check_in/:booking_id', (req, res) => {
     `
     var response = runQuery(query);
     response.then((result) => {
-        res.send(result);
+        console.log("Successfully created renting")
     })
     .catch((err) => {
         res.send(err);
         console.log(err);
+    })
+    query = 
+    `
+    UPDATE booking
+    SET checked_in = true
+    WHERE booking_id = '${req.params.booking_id}'
+    `
+    response = runQuery(query);
+    response.then((result) => {
+        res.send(result);
+    })
+    .catch((err) => {
+        res.send(err)
     })
 })
 

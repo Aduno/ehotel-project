@@ -165,6 +165,7 @@ router.post('/booking', (req, res) => {
     Booking_end_date DATE NOT NULL,
     Room_number INT NOT NULL,
     Hotel_ID INT NOT NULL,
+    Checked_in BOOLEAN,
     CONSTRAINT date_validation CHECK (Booking_start_date <= Booking_end_date),
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
     FOREIGN KEY (Room_number) REFERENCES Room(Room_number),
@@ -325,27 +326,27 @@ router.post('trigger_functions', (req, res) => {
     });
     query = 
     `
-    CREATE OR REPLACE FUNCTION archive_renting()
-    RETURNS TRIGGER 
-    LANGUAGE PLPGSQL
-    AS
-    $$
-    DECLARE var_chain_name VARCHAR(30) := (SELECT chain_name FROM hotel WHERE hotel_id = NEW.hotel_id);
-    BEGIN
-        IF NEW.booking_id is not null 
-        THEN
-            INSERT INTO renting_archive
-            VALUES(NEW.check_in_date, NEW.check_out_date,
-                NEW.renting_id, NEW.customer_id, NEW.room_number,
-                NEW.hotel_id, NEW.booking_ID, var_chain_name);
-        ELSE
-            INSERT INTO renting_archive
-            VALUES(NEW.check_in_date, NEW.check_out_date,
-                NEW.renting_id, NEW.customer_id, NEW.room_number,
-                NEW.hotel_id, var_chain_name);
-        END IF;
-        RETURN NULL;
-    END;
+        CREATE OR REPLACE FUNCTION archive_renting()
+        RETURNS TRIGGER 
+        LANGUAGE PLPGSQL
+        AS
+        $$
+        DECLARE var_chain_name VARCHAR(30) := (SELECT chain_name FROM hotel WHERE hotel_id = NEW.hotel_id);
+        BEGIN
+            IF NEW.booking_id is not null 
+            THEN
+                INSERT INTO renting_archive
+                VALUES(NEW.check_in_date, NEW.check_out_date,
+                    NEW.renting_id, NEW.customer_id, NEW.room_number,
+                    NEW.hotel_id, NEW.booking_ID, var_chain_name);
+            ELSE
+                INSERT INTO renting_archive
+                VALUES(NEW.check_in_date, NEW.check_out_date,
+                    NEW.renting_id, NEW.customer_id, NEW.room_number,
+                    NEW.hotel_id, var_chain_name);
+            END IF;
+            RETURN NULL;
+        END;
     $$  
     `
     runQuery(query).then(result => {
