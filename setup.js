@@ -330,19 +330,21 @@ router.post('trigger_functions', (req, res) => {
     LANGUAGE PLPGSQL
     AS
     $$
+    DECLARE var_chain_name VARCHAR(30) := (SELECT chain_name FROM hotel WHERE hotel_id = NEW.hotel_id);
     BEGIN
         IF NEW.booking_id is not null 
         THEN
             INSERT INTO renting_archive
-            VALUES(renting_start_date, renting_end_date,
-                renting_id, customer_id, room_number,
-                hotel_id, booking_ID, chain_name);
+            VALUES(NEW.check_in_date, NEW.check_out_date,
+                NEW.renting_id, NEW.customer_id, NEW.room_number,
+                NEW.hotel_id, NEW.booking_ID, var_chain_name);
         ELSE
             INSERT INTO renting_archive
             VALUES(NEW.check_in_date, NEW.check_out_date,
                 NEW.renting_id, NEW.customer_id, NEW.room_number,
-                NEW.hotel_id, NEW.chain_name);
+                NEW.hotel_id, var_chain_name);
         END IF;
+        RETURN NULL;
     END;
     $$  
     `
