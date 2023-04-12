@@ -6,7 +6,7 @@ var upload = multer();
 router.use(upload.array());
 
 // Update customer booking to renting (Still keeps the old booking in the table)
-router.post('booking/check_in/:booking_id', (req, res) => {
+router.post('/booking/check_in/:booking_id', (req, res) => {
     var query= 
     `
     INSERT INTO renting 
