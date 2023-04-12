@@ -46,8 +46,8 @@ router.post('/book',(req,res)=>{
 
 // Create a check-in + check-in from booking (+Archive)
 router.post('/rent', (req, res) => {
-    var values = format(req.query.customer_id,req.query.hotel_id, req.query.room_number, req.query.start, req.query.end, req.query.booking_id);
-    if(req.query.booking_id){
+    var values = format(req.body.customer_id,req.body.hotel_id, req.body.room_number, req.body.start, req.body.end, req.body.booking_id);
+    if(req.body.booking_id){
         var insert = 'insert into renting(customer_id, hotel_id, room_number, check_in_date, check_out_date, booking_id) values '+ values;
     }
     else{
