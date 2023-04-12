@@ -223,22 +223,6 @@ router.get('/renting/past', (req, res)=>{
     });
 })
 
-router.get('availability/:city', (req, res)=>{
-    // city has to be in the format of
-    // First letter capitalized and following the space as well
-    // Additionally, need to replace the space with an underscore
-    // Example: availability/New_York
-    var query = `
-    SELECT * from ${req.params.city}_Capacity
-    `;
-    var response = runQuery(query);
-    response.then((data)=>{
-        res.send(data);
-    }).catch((err)=>{
-        console.log(err);
-        res.send(err);
-    })
-})
 // *** Room filter page apis ***
 // Return rooms that are available for use based on the filter
 router.get('/available_rooms', (req, res)=>{
@@ -283,22 +267,25 @@ router.get('cities', (req, res)=>{
         res.sendStatus(500);
     });
 })
-// Gets the capacity of the hotel
+// Gets the capacity of the city
 router.get('/available_rooms/:city', (req, res)=>{
-    if(req.query.city){
-        var city = req.params.city.replace(' ','_');
-        var query = '(select * from '+ req.params.city + '_Capacity])'  
-        var response = runQuery(query);
-        response.then((data)=>{
-            res.send(data);
-        }).catch((err)=>{
-            console.log(err);
-            res.sendStatus(500);
-        })
-    }
-    else{
+    var query = 
+    `
+    SELECT * from city_capacity
+    `
+    var response = runQuery(query);
+    response.then((data)=>{
+        var cities = data['rows'];
+        for(key in cities){
+            var room_query = 
+            `
+            SELECT COUNT(room_number) from room
+            `
+        }
+    }).catch((err)=>{
+        console.log(err);
         res.sendStatus(500);
-    }
+    })
 })
 // ** Query Functions ** //
 function checkLogin(username, password, isEmployee){
