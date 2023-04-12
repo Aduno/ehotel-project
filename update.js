@@ -15,7 +15,7 @@ router.post('/booking/check_in/:booking_id', (req, res) => {
     SELECT
     room_number, customer_id, booking_id,
     hotel_id, booking_start_date, booking_end_date 
-    FROM booking 
+    FROM bookings
     WHERE booking_id='${req.params.booking_id}'
     `
     var response = runQuery(booking)
