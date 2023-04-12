@@ -164,9 +164,11 @@ router.post('/booking', (req, res) => {
     Booking_start_date DATE NOT NULL,
     Booking_end_date DATE NOT NULL,
     Room_number INT NOT NULL,
+    Hotel_ID INT NOT NULL,
     CONSTRAINT date_validation CHECK (Booking_start_date <= Booking_end_date),
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
-    FOREIGN KEY (Room_number) REFERENCES Room(Room_number)
+    FOREIGN KEY (Room_number) REFERENCES Room(Room_number),
+    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID)
     )`;
     runQuery(bookingQuery)
         .then(result => {
@@ -188,10 +190,12 @@ router.post('/renting', (req, res) => {
     Booking_ID SERIAL,
     Check_in_date DATE NOT NULL,
     Check_out_date DATE NOT NULL,
+    Hotel_ID INT NOT NULL,
     CHECK (Check_in_date <= Check_out_date),
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
     FOREIGN KEY (Room_number) REFERENCES Room(Room_number),
-    FOREIGN KEY (Booking_ID) REFERENCES Booking(Booking_ID)
+    FOREIGN KEY (Booking_ID) REFERENCES Booking(Booking_ID),
+    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID)
     )`;
     runQuery(rentingQuery)
         .then(result => {

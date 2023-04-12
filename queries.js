@@ -200,7 +200,7 @@ router.get('/booking/before_start_date', (req, res)=>{
 
 router.get('/renting/ongoing', (req, res)=>{
     var query = `
-    SELECT renting.*, price, chain_name from renting join hotel using(hotel_id) join room using(room_number) where renting_end_date >= '${req.query.date}'
+    SELECT renting.*, price, chain_name from renting join hotel using(hotel_id) join room using(room_number) where renting_end_date < '${req.query.date}'
     `;
     var response = runQuery(query);
     response.then((data)=>{
@@ -212,7 +212,7 @@ router.get('/renting/ongoing', (req, res)=>{
 })
 router.get('/renting/past', (req, res)=>{
     var query = `
-    SELECT renting.*, price, chain_name from renting join hotel using(hotel_id) join room using(room_number) where renting_end_date < '${req.query.date}'
+    SELECT renting.*, price, chain_name from renting join hotel using(hotel_id) join room using(room_number) where renting_end_date >= '${req.query.date}'
     `;
     var response = runQuery(query);
     response.then((data)=>{
@@ -221,6 +221,23 @@ router.get('/renting/past', (req, res)=>{
         console.log(err);
         res.send(err);
     });
+})
+
+router.get('availability/:city', (req, res)=>{
+    // city has to be in the format of
+    // First letter capitalized and following the space as well
+    // Additionally, need to replace the space with an underscore
+    // Example: availability/New_York
+    var query = `
+    SELECT * from ${req.params.city}_Capacity
+    `;
+    var response = runQuery(query);
+    response.then((data)=>{
+        res.send(data);
+    }).catch((err)=>{
+        console.log(err);
+        res.send(err);
+    })
 })
 // *** Room filter page apis ***
 // Return rooms that are available for use based on the filter
