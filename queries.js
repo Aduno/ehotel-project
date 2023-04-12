@@ -281,8 +281,16 @@ router.get('/hotel_capacities', (req, res)=>{
     })
 })
 // Gets the capacity of the city
-router.get('/available_rooms/:city', (req, res)=>{
-
+router.get('/cities/available_rooms', (req, res)=>{
+    var query = 'SELECT * from City_Capacity'
+    var response = runQuery(query);
+    response.then((data)=>{
+        res.send(data);
+    })
+    .catch((err)=>{
+        console.log(err);
+        res.sendStatus(500);
+    })
 })
 // ** Query Functions ** //
 function checkLogin(username, password, isEmployee){
