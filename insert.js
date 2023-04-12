@@ -48,10 +48,10 @@ router.post('/book',(req,res)=>{
 router.post('/rent', (req, res) => {
     var values = format(req.query.customer_id,req.query.hotel_id, req.query.room_number, req.query.start, req.query.end, req.query.booking_id);
     if(req.query.booking_id){
-        var insert = 'insert into booking(customer_id, hotel_id, room_number, check_in_date, check_out_date, booking_id) values '+ values;
+        var insert = 'insert into renting(customer_id, hotel_id, room_number, check_in_date, check_out_date, booking_id) values '+ values;
     }
     else{
-        var insert = 'insert into booking(customer_id, hotel_id, room_number, check_in_date, check_out_date) values '+ values;
+        var insert = 'insert into renting(customer_id, hotel_id, room_number, check_in_date, check_out_date) values '+ values;
     }
     runQuery(insert)
         .then((result)=>{
