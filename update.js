@@ -18,7 +18,7 @@ router.post('/booking/check_in/:booking_id', (req, res) => {
     FROM bookings
     WHERE booking_id='${req.params.booking_id}'
     `
-    var response = runQuery(booking)
+    var response = runQuery(query);
     response.then((result) => {
         res.send(result);
     })
