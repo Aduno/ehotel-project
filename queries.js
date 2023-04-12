@@ -198,7 +198,7 @@ router.get('/booking/before_start_date', (req, res)=>{
     });
 })
 
-router.get('/renting/past', (req, res)=>{
+router.get('/renting/ongoing', (req, res)=>{
     var query = `
     SELECT renting.*, price, chain_name from renting join hotel using(hotel_id) join room using(room_number) where renting_end_date >= '${req.query.date}'
     `;
@@ -210,7 +210,7 @@ router.get('/renting/past', (req, res)=>{
         res.send(err);
     });
 })
-router.get('/renting/ongoing', (req, res)=>{
+router.get('/renting/past', (req, res)=>{
     var query = `
     SELECT renting.*, price, chain_name from renting join hotel using(hotel_id) join room using(room_number) where renting_end_date < '${req.query.date}'
     `;
