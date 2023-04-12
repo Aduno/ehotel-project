@@ -150,6 +150,26 @@ router.get('/employee/:employee_id', (req, res)=>{
     });
 })
 
+// Get booking archives
+router.get('/booking_archives', (req, res)=>{
+    var query = 'SELECT * FROM booking_archive';
+    var response = runQuery(query);
+    response.then((data)=>{
+        res.send(data);
+    }).catch((err)=>{
+        console.log(err);
+    });
+})
+// Get renting archives
+router.get('/renting_archives', (req, res)=>{
+    var query = 'SELECT * FROM renting_archive';
+    var response = runQuery(query);
+    response.then((data)=>{
+        res.send(data);
+    }).catch((err)=>{
+        console.log(err);
+    });
+})
 // Get Booking information for a room based on customer_id
 router.get('/bookings/:customer_id', (req, res)=>{
     var query = 'SELECT booking.*, hotel.chain_name, price FROM booking join hotel using(hotel_id) join room on room.room_number=booking.room_number where customer_id='+req.params.customer_id;
