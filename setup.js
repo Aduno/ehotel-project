@@ -334,12 +334,12 @@ router.post('trigger_functions', (req, res) => {
         IF NEW.booking_id is not null 
         THEN
             INSERT INTO renting_archive
-            VALUES(NEW.renting_start_date, NEW.renting_end_date,
-                NEW.renting_id, NEW.customer_id, NEW.room_number,
-                NEW.hotel_id, NEW.booking_ID, NEW.chain_name);
+            VALUES(renting_start_date, renting_end_date,
+                renting_id, customer_id, room_number,
+                hotel_id, booking_ID, chain_name);
         ELSE
             INSERT INTO renting_archive
-            VALUES(NEW.renting_start_date, NEW.renting_end_date,
+            VALUES(NEW.check_in_date, NEW.check_out_date,
                 NEW.renting_id, NEW.customer_id, NEW.room_number,
                 NEW.hotel_id, NEW.chain_name);
         END IF;
