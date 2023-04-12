@@ -75,7 +75,7 @@ router.post('/hotel', (req, res) => {//here should check the star rating conditi
 // Create Room table
 router.post('/room', (req, res) => {//still need to work on the condition of the attrbutes (capacity --> single double etc)
     const roomQuery = `
-    CREATE TABLE IF NOT EXISTS Room (
+    CREATE TABLE Room (
     Room_number INT NOT NULL PRIMARY KEY,
     Hotel_ID INT NOT NULL,
     Price MONEY NOT NULL,
