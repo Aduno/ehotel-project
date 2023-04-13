@@ -277,6 +277,22 @@ router.post('/views/city', (req, res) => {
     });
 })
 
+router.post('/views/capcity', (req, res) => {
+    var query =`
+    CREATE VIEW Hotel_Capacity AS
+    SELECT hotel_id, SUM(capacity) AS total_capacity
+    FROM room
+    GROUP BY hotel_id;
+    `   
+    var response = runQuery(query);
+    response.then(result => {
+        res.send(result);
+    }).catch(err => {
+        console.log(err);
+        res.sendStatus(500);
+    })
+})
+
 router.post('trigger_functions', (req, res) => {
     var query = `
     CREATE OR REPLACE FUNCTION prevent_booking_overlap()
@@ -401,5 +417,36 @@ router.post('/triggers', (req, res) => {
         res.sendStatus(500);  
     });
 });
+
+router.post('/index', (req, res) => {
+    var query = `
+    CREATE INDEX booking_index ON booking (booking_start_date, booking_end_date);
+    `
+    runQuery(query).then(result => {
+        console.log("Successfully created booking index");
+    }).catch(err => {
+        console.log("Failed to create booking index");
+        res.sendStatus(500);
+    });
+    query = `
+    CREATE INDEX room_index ON room (price, tv, room_service, fridge, wifi, air_conditioner, extendable, capacity, view);
+    `
+    runQuery(query).then(result => {
+        console.log("Successfully created room index");
+    }).catch(err => {
+        console.log("Failed to create room index");
+        res.sendStatus(500);
+    });
+    query = `
+    CREATE INDEX hotel_index ON hotel (star_rating, city, country);
+    `
+    runQuery(query).then(result => {
+        console.log("Successfully created hotel index");
+        res.sendStatus(200);
+    }).catch(err => {
+        console.log("Failed to create hotel index");
+        res.sendStatus(500);
+    });
+})
 // Create a new employee
 module.exports = router;

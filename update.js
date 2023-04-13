@@ -61,9 +61,11 @@ router.post('/customers/:customer_id', (req, res) => {
         password: null,
         SSN_SIN: null
     }
-    var query = `update 
-    customer set ${formatUpdate(req.body, customer_template)}
-     where customer_id = '${req.params.customer_id}'`
+    var query = `
+    UPDATE 
+    customer
+    SET ${formatUpdate(req.body, customer_template)}
+    WHERE customer_id = '${req.params.customer_id}'`
     var response = runQuery(query);
     response.then((result) => {
         console.log(result);

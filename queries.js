@@ -127,9 +127,7 @@ router.get('/customers', (req, res)=>{
 })
 
 // Get customer information
-// Might need to fix this later on. I think this query could cause some issues where a customer has a renting without booking
 router.get('/customer/:customer_id', (req, res)=>{
-    // var query = 'SELECT * FROM customer join booking using(customer_id) join renting using(customer_id) where customer_id='+req.params.customer_id;
     var query = 'SELECT * FROM customer where customer_id='+req.params.customer_id;
     var response = runQuery(query);
     response.then((data)=>{
