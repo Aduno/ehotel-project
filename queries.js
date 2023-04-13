@@ -290,7 +290,7 @@ router.get('cities', (req, res)=>{
 
 // Gets the capacity of all the hotels
 router.get('/hotel_capacities', (req, res)=>{
-    var query = 'SELECT * from hotel_capacity';
+    var query = 'SELECT hotel_id, total_capacity, chain_name from hotel_capacity join hotel using(hotel_id)';
     var response = runQuery(query);
     response.then((data)=>{
         res.send(data);
