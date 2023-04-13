@@ -359,7 +359,7 @@ router.post('trigger_functions', (req, res) => {
 })
 router.post('/triggers', (req, res) => {
     var query = `
-    CREATE TRIGGER booking_overlap_trigger BEFORE insert OR update on booking
+    CREATE TRIGGER booking_overlap_trigger BEFORE insert on booking
     FOR EACH ROW
     EXECUTE PROCEDURE prevent_booking_overlap()
     `
@@ -373,7 +373,7 @@ router.post('/triggers', (req, res) => {
         });
 
     var query = `
-    CREATE TRIGGER booking_trigger AFTER insert OR update on booking
+    CREATE TRIGGER booking_trigger AFTER insert on booking
     FOR EACH ROW 
     EXECUTE PROCEDURE archive_booking()
     `

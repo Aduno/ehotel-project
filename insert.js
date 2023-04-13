@@ -61,11 +61,18 @@ router.post('/rent', (req, res) => {
         .catch((err)=>{
             res.sendStatus(500);
         })
+    query = 'UPDATE BOOKING SET Checked_in = true WHERE booking_id = ' + req.body.booking_id;
+    runQuery(query)
+        .then((result)=>{
+            console.log("Successfully updated booking")
+            res.send(result)
+        })
+        .catch((err)=>{
+            console.log(err);
+            res.sendStatus(500);   
+        })
+});
 
-})
-// Create new hotel
-// Create new rooms
-// Create new hotel chain
 
 // Creating new user
 // Check what happens if the user dose not enter unit number
